@@ -14,11 +14,13 @@ namespace ProjectMonoGame
         public AnimationFrame currentFrame;
         private double xOffset;
         int counter = 0;
+        int animationSpeed;
 
-        public Animation()
+        public Animation(int animationSpeedIn)
         {
             frames = new List<AnimationFrame>();
             xOffset = 0;
+            animationSpeed = animationSpeedIn;
         }
         public void AddFrame(Rectangle rectangle)
         {
@@ -31,7 +33,7 @@ namespace ProjectMonoGame
         }
         public void Update(GameTime gameTime)
         {
-            xOffset += (float)currentFrame.SourceRectangle.Width * gameTime.ElapsedGameTime.Milliseconds / 175;
+            xOffset += (float)currentFrame.SourceRectangle.Width * gameTime.ElapsedGameTime.Milliseconds / animationSpeed;
             if (xOffset >= currentFrame.SourceRectangle.Width)
             {
                 counter++;
