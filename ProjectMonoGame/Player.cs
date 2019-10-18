@@ -28,9 +28,12 @@ namespace ProjectMonoGame
         private int spriteWidth = 32;
         private int spritesheetWidth = 896;
         private int spriteScale = 5;
+        private int animationDelay = 0;
 
         private bool facingRight = true;
         private bool isIdle = true;
+        private bool isJumping;
+        private bool isAttacking;
 
 
 
@@ -42,14 +45,14 @@ namespace ProjectMonoGame
 
             animationIdleLeft = new Animation(175);
             animationWalkingLeft = new Animation(50);
-            //animationAttackLeft = new Animation();
+            animationAttackLeft = new Animation(400);
             //animationHitLeft = new Animation();
-            //animationJumpLeft = new Animation();
+            animationJumpLeft = new Animation(100);
             animationIdleRight = new Animation(175);
             animationWalkingRight = new Animation(50);
-            //animationAttackRight = new Animation();
+            animationAttackRight = new Animation(400);
             //animationHitRight = new Animation();
-            //animationJumpRight = new Animation();
+            animationJumpRight = new Animation(100);
 
             animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - spriteWidth,0, spriteWidth, spriteWidth));
             animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 2),0, spriteWidth, spriteWidth));
@@ -71,12 +74,12 @@ namespace ProjectMonoGame
             animationIdleRight.AddFrame(new Rectangle(spriteWidth * 7, 0, spriteWidth, spriteWidth));
             animationIdleRight.AddFrame(new Rectangle(spriteWidth * 8, 0, spriteWidth, spriteWidth));
 
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 8, 0, spriteWidth, spriteWidth));
             animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 9, 0, spriteWidth, spriteWidth));
             animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 10, 0, spriteWidth, spriteWidth));
             animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 11, 0, spriteWidth, spriteWidth));
             animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 12, 0, spriteWidth, spriteWidth));
             animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 13, 0, spriteWidth, spriteWidth));
+            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 14, 0, spriteWidth, spriteWidth));
 
             animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 10), 0, spriteWidth, spriteWidth));
             animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 11), 0, spriteWidth, spriteWidth));
@@ -85,12 +88,28 @@ namespace ProjectMonoGame
             animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 14), 0, spriteWidth, spriteWidth));
             animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 15), 0, spriteWidth, spriteWidth));
 
+            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 23, 0, spriteWidth, spriteWidth));
+            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 24, 0, spriteWidth, spriteWidth));
+            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 25, 0, spriteWidth, spriteWidth));
+            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 26, 0, spriteWidth, spriteWidth));
+            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 27, 0, spriteWidth, spriteWidth));
+
+            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 24), 0, spriteWidth, spriteWidth));
+            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 25), 0, spriteWidth, spriteWidth));
+            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 26), 0, spriteWidth, spriteWidth));
+            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 27), 0, spriteWidth, spriteWidth));
+            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 28), 0, spriteWidth, spriteWidth));
+
+            animationJumpRight.AddFrame(new Rectangle(spriteWidth * 15, 0, spriteWidth, spriteWidth));
+
+            animationJumpLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 16), 0, spriteWidth, spriteWidth));
+
         }
 
         public void Update (GameTime gametime)
         {
 
-            if (Keyboard.GetState().IsKeyUp(Keys.Right) || Keyboard.GetState().IsKeyUp(Keys.Left))
+            if ((Keyboard.GetState().IsKeyUp(Keys.Right) || Keyboard.GetState().IsKeyUp(Keys.Left) || Keyboard.GetState().IsKeyUp(Keys.X)) && !isJumping)
             {
                 walkingSpeed = 0;
             }
@@ -115,6 +134,31 @@ namespace ProjectMonoGame
                 position.X += walkingSpeed;
             }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                isJumping = true;
+                if (facingRight)
+                    animationJumpRight.Update(gametime);
+                if (!facingRight)
+                    animationJumpLeft.Update(gametime);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.X))
+            {
+                isAttacking = true;
+                for (int i = 0; i < animationAttackLeft.frames.Count; i++)
+                {
+                    if (facingRight)
+                        animationAttackRight.Update(gametime);
+                    if (!facingRight)
+                        animationAttackLeft.Update(gametime);
+                }
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.X))
+            {
+                isAttacking = false;
+            }
 
             if (walkingSpeed == 0)
             {
@@ -131,7 +175,15 @@ namespace ProjectMonoGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (isIdle)
+            if (isAttacking)
+            {
+                if (facingRight)
+                    spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationAttackRight.currentFrame.SourceRectangle, Color.White);
+                if (!facingRight)
+                    spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationAttackLeft.currentFrame.SourceRectangle, Color.White);
+            }
+
+            if (isIdle && !isAttacking)
             {
                 if (facingRight)
                     spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationIdleRight.currentFrame.SourceRectangle, Color.White);
@@ -142,10 +194,21 @@ namespace ProjectMonoGame
 
             if (!isIdle)
             {
-                if (facingRight)
-                    spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationWalkingRight.currentFrame.SourceRectangle, Color.White);
-                if (!facingRight)
-                    spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationWalkingLeft.currentFrame.SourceRectangle, Color.White);
+                if (!isJumping && !isAttacking)
+                {
+                    if (facingRight)
+                        spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationWalkingRight.currentFrame.SourceRectangle, Color.White);
+                    if (!facingRight)
+                        spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationWalkingLeft.currentFrame.SourceRectangle, Color.White);
+                }
+
+                if (isJumping && !isAttacking)
+                {
+                    if (facingRight)
+                        spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationJumpRight.currentFrame.SourceRectangle, Color.White);
+                    if (!facingRight)
+                        spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationJumpLeft.currentFrame.SourceRectangle, Color.White);
+                }
             }
         }
 

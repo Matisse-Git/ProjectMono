@@ -10,7 +10,7 @@ namespace ProjectMonoGame
 {
     class Animation
     {
-        private List<AnimationFrame> frames;
+        public  List<AnimationFrame> frames;
         public AnimationFrame currentFrame;
         private double xOffset;
         int counter = 0;
@@ -31,9 +31,9 @@ namespace ProjectMonoGame
             frames.Add(frame);
             currentFrame = frames[0];
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gametime)
         {
-            xOffset += (float)currentFrame.SourceRectangle.Width * gameTime.ElapsedGameTime.Milliseconds / animationSpeed;
+            xOffset += (float)currentFrame.SourceRectangle.Width * gametime.ElapsedGameTime.Milliseconds / animationSpeed;
             if (xOffset >= currentFrame.SourceRectangle.Width)
             {
                 counter++;
