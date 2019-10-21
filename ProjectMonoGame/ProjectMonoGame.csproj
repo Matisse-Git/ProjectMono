@@ -45,6 +45,7 @@
     <Compile Include="AnimationCreator.cs" />
     <Compile Include="AnimationFrame.cs" />
     <Compile Include="BatchDrawer.cs" />
+    <Compile Include="Camera2D.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Player.cs" />

@@ -9,6 +9,7 @@ namespace ProjectMonoGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player finn;
+        //Camera2D camera;
 
         public Game1()
         {
@@ -30,6 +31,7 @@ namespace ProjectMonoGame
 
             finn = new Player(new Vector2(20, 200), spritesheetLeft, spritesheetRight, new KeyboardHandler());
 
+            //camera = new Camera2D(GraphicsDevice.Viewport);
         }
 
         protected override void UnloadContent()
@@ -48,6 +50,9 @@ namespace ProjectMonoGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            //var viewMatrix = camera.GetViewMatrix();
+            //camera.position = finn.position;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             finn.Draw(spriteBatch);

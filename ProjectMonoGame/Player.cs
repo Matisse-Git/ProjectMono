@@ -15,7 +15,7 @@ namespace ProjectMonoGame
 
         private Texture2D spritesheetLeft, spritesheetRight;
 
-        private Vector2 position;
+        public Vector2 position;
 
         private Animation animationIdleLeft, animationWalkingLeft, 
                           animationAttackLeft, animationHitLeft, 
