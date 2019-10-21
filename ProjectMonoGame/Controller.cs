@@ -21,13 +21,13 @@ namespace ProjectMonoGame
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 return "Left";
 
-            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 return "Right";
 
-            else if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 return "Jump";
 
-            else if (Keyboard.GetState().IsKeyDown(Keys.X))
+            if (Keyboard.GetState().IsKeyDown(Keys.X))
                 return "Attack";
 
             else

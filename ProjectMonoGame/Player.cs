@@ -24,7 +24,9 @@ namespace ProjectMonoGame
                           animationHitRight, animationJumpRight,
                           animationDieRight, animationDieLeft;
 
-        AnimationCreator aniCreator;
+        private AnimationCreator aniCreator;
+
+        private BatchDrawer finnDrawer;
 
         private IController inputHandler;
 
@@ -96,14 +98,18 @@ namespace ProjectMonoGame
                     break;
                 case "Attack":
                     isAttacking = true;
-                    DoAttack(gametime);
                     break;
                 case "Null":
                     walkingSpeed = 0;
                     isIdle = true;
                     DoNothing(gametime);
                     break;
+            }
 
+            //When using a full animation by one press of the button, you have to use it like this, otherwise it will not work!!
+            if (isAttacking)
+            {
+                DoAttack(gametime);
             }
         }
 
@@ -119,7 +125,6 @@ namespace ProjectMonoGame
                 if (animationAttackLeft.UpdateFull(gametime))
                     isAttacking = false;
             }
-            isAttacking = false;
         }
 
         private void Walk(GameTime gametime)
@@ -165,39 +170,26 @@ namespace ProjectMonoGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            finnDrawer = new BatchDrawer(spriteBatch, spritesheetLeft, spritesheetRight, spriteScale);
+
             if (isAttacking)
-            {
-                if (facingRight)
-                    spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationAttackRight.currentFrame.SourceRectangle, Color.White);
-                if (!facingRight)
-                    spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationAttackLeft.currentFrame.SourceRectangle, Color.White);
-            }
+                finnDrawer.DrawAni(facingRight, position, animationAttackRight, animationAttackLeft);
 
             if (isIdle && !isAttacking)
             {
-                if (facingRight)
-                    spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationIdleRight.currentFrame.SourceRectangle, Color.White);
-
-                if (!facingRight)
-                    spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationIdleLeft.currentFrame.SourceRectangle, Color.White);
+                finnDrawer.DrawAni(facingRight, position, animationIdleRight, animationIdleLeft);
             }
 
             if (!isIdle)
             {
                 if (!isJumping && !isAttacking)
                 {
-                    if (facingRight)
-                        spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationWalkingRight.currentFrame.SourceRectangle, Color.White);
-                    if (!facingRight)
-                        spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationWalkingLeft.currentFrame.SourceRectangle, Color.White);
+                    finnDrawer.DrawAni(facingRight, position, animationWalkingRight, animationWalkingLeft);
                 }
 
                 if (isJumping && !isAttacking)
                 {
-                    if (facingRight)
-                        spriteBatch.Draw(spritesheetRight, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationJumpRight.currentFrame.SourceRectangle, Color.White);
-                    if (!facingRight)
-                        spriteBatch.Draw(spritesheetLeft, new Rectangle((int)position.X, (int)position.Y, spriteWidth * spriteScale, spriteWidth * spriteScale), animationJumpLeft.currentFrame.SourceRectangle, Color.White);
+                    finnDrawer.DrawAni(facingRight, position, animationJumpRight, animationJumpLeft);
                 }
             }
         }
