@@ -44,5 +44,24 @@ namespace ProjectMonoGame
                 xOffset = 0;
             }
         }
+
+       
+        public bool UpdateFull(GameTime gametime)
+        {
+            xOffset += (float)currentFrame.SourceRectangle.Width * gametime.ElapsedGameTime.Milliseconds / animationSpeed;
+            if (xOffset >= currentFrame.SourceRectangle.Width)
+            {
+                counter++;
+                if (counter >= frames.Count)
+                {
+                    counter = 0;
+                    return true;
+                }
+
+                currentFrame = frames[counter];
+                xOffset = 0;
+            }
+            return false;
+        }
     }
 }

@@ -21,156 +21,146 @@ namespace ProjectMonoGame
                           animationAttackLeft, animationHitLeft, 
                           animationJumpLeft, animationIdleRight,
                           animationWalkingRight, animationAttackRight, 
-                          animationHitRight, animationJumpRight;
+                          animationHitRight, animationJumpRight,
+                          animationDieRight, animationDieLeft;
+
+        AnimationCreator aniCreator;
+
+        private IController inputHandler;
 
         private float walkingSpeed = 0;
         private float walkingSpeedAssign = 8;
         private int spriteWidth = 32;
         private int spritesheetWidth = 896;
         private int spriteScale = 5;
-        private int animationDelay = 0;
 
         private bool facingRight = true;
         private bool isIdle = true;
         private bool isJumping;
         private bool isAttacking;
+        private bool isDead = false;
 
 
 
-        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight)
+        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, IController inputHandlerIn)
         {
+            inputHandler = inputHandlerIn;
             position = positionIn;
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
 
+            aniCreator = new AnimationCreator();
+
             animationIdleLeft = new Animation(175);
             animationWalkingLeft = new Animation(50);
-            animationAttackLeft = new Animation(400);
-            //animationHitLeft = new Animation();
+            animationAttackLeft = new Animation(75);
+            animationHitLeft = new Animation(50);
+            animationDieLeft = new Animation(75);
             animationJumpLeft = new Animation(100);
             animationIdleRight = new Animation(175);
             animationWalkingRight = new Animation(50);
-            animationAttackRight = new Animation(400);
-            //animationHitRight = new Animation();
+            animationAttackRight = new Animation(75);
+            animationHitRight = new Animation(50);
+            animationDieRight = new Animation(75);
             animationJumpRight = new Animation(100);
 
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - spriteWidth,0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 2),0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 3),0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 4), 0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 5), 0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 6), 0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 7), 0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 8), 0, spriteWidth, spriteWidth));
-            animationIdleLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 9), 0, spriteWidth, spriteWidth));
-
-            animationIdleRight.AddFrame(new Rectangle(0, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 2, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 3, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 4, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 5, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 6, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 7, 0, spriteWidth, spriteWidth));
-            animationIdleRight.AddFrame(new Rectangle(spriteWidth * 8, 0, spriteWidth, spriteWidth));
-
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 9, 0, spriteWidth, spriteWidth));
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 10, 0, spriteWidth, spriteWidth));
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 11, 0, spriteWidth, spriteWidth));
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 12, 0, spriteWidth, spriteWidth));
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 13, 0, spriteWidth, spriteWidth));
-            animationWalkingRight.AddFrame(new Rectangle(spriteWidth * 14, 0, spriteWidth, spriteWidth));
-
-            animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 10), 0, spriteWidth, spriteWidth));
-            animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 11), 0, spriteWidth, spriteWidth));
-            animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 12), 0, spriteWidth, spriteWidth));
-            animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 13), 0, spriteWidth, spriteWidth));
-            animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 14), 0, spriteWidth, spriteWidth));
-            animationWalkingLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 15), 0, spriteWidth, spriteWidth));
-
-            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 23, 0, spriteWidth, spriteWidth));
-            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 24, 0, spriteWidth, spriteWidth));
-            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 25, 0, spriteWidth, spriteWidth));
-            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 26, 0, spriteWidth, spriteWidth));
-            animationAttackRight.AddFrame(new Rectangle(spriteWidth * 27, 0, spriteWidth, spriteWidth));
-
-            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 24), 0, spriteWidth, spriteWidth));
-            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 25), 0, spriteWidth, spriteWidth));
-            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 26), 0, spriteWidth, spriteWidth));
-            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 27), 0, spriteWidth, spriteWidth));
-            animationAttackLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 28), 0, spriteWidth, spriteWidth));
-
-            animationJumpRight.AddFrame(new Rectangle(spriteWidth * 15, 0, spriteWidth, spriteWidth));
-
-            animationJumpLeft.AddFrame(new Rectangle(spritesheetWidth - (spriteWidth * 16), 0, spriteWidth, spriteWidth));
-
+            aniCreator.CreateAniLeft(animationIdleLeft, 1, 9);
+            aniCreator.CreateAniRight(animationIdleRight, 0, 8);
+            aniCreator.CreateAniRight(animationWalkingRight, 9, 14);
+            aniCreator.CreateAniLeft(animationWalkingLeft, 10, 15);
+            aniCreator.CreateAniRight(animationAttackRight, 23, 27);
+            aniCreator.CreateAniLeft(animationAttackLeft, 24, 28);
+            aniCreator.CreateAniRight(animationJumpRight, 15, 15);
+            aniCreator.CreateAniLeft(animationJumpLeft, 16, 16);
+            aniCreator.CreateAniLeft(animationHitLeft, 17, 18);
+            aniCreator.CreateAniRight(animationHitRight, 16, 17);
+            aniCreator.CreateAniLeft(animationDieLeft, 19, 23);
+            aniCreator.CreateAniRight(animationDieRight, 18, 22);
         }
 
         public void Update (GameTime gametime)
         {
-
-            if ((Keyboard.GetState().IsKeyUp(Keys.Right) || Keyboard.GetState().IsKeyUp(Keys.Left) || Keyboard.GetState().IsKeyUp(Keys.X)) && !isJumping)
+            switch (inputHandler.GetButtonPressed())
             {
-                walkingSpeed = 0;
-            }
+                case "Left":
+                    facingRight = false;
+                    Walk(gametime);
+                    break;
+                case "Right":
+                    facingRight = true;
+                    Walk(gametime);
+                    break;
+                case "Jump":
+                    isJumping = true;
+                    Jump(gametime);
+                    break;
+                case "Attack":
+                    isAttacking = true;
+                    DoAttack(gametime);
+                    break;
+                case "Null":
+                    walkingSpeed = 0;
+                    isIdle = true;
+                    DoNothing(gametime);
+                    break;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            }
+        }
+
+        private void DoAttack(GameTime gametime)
+        {
+            if (facingRight)
             {
-                walkingSpeed = -walkingSpeedAssign;
-                animationWalkingLeft.Update(gametime);
-                isIdle = false;
-                facingRight = false;
-
-                position.X += walkingSpeed;
+                if (animationAttackRight.UpdateFull(gametime))
+                    isAttacking = false;
             }
+            if (!facingRight)
+            {
+                if (animationAttackLeft.UpdateFull(gametime))
+                    isAttacking = false;
+            }
+            isAttacking = false;
+        }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+        private void Walk(GameTime gametime)
+        {
+            if (facingRight)
             {
                 walkingSpeed = walkingSpeedAssign;
                 animationWalkingRight.Update(gametime);
-                isIdle = false;
-                facingRight = true;
-
-                position.X += walkingSpeed;
             }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (!facingRight)
             {
-                isJumping = true;
-                if (facingRight)
-                    animationJumpRight.Update(gametime);
-                if (!facingRight)
-                    animationJumpLeft.Update(gametime);
+                walkingSpeed = -walkingSpeedAssign;
+                animationWalkingLeft.Update(gametime);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.X))
+            isIdle = false;
+            position.X += walkingSpeed;
+
+        }
+
+        private void Jump(GameTime gametime)
+        {
+            if (facingRight)
+                animationJumpRight.Update(gametime);
+            if (!facingRight)
+                animationJumpLeft.Update(gametime);
+        }
+
+        private void DoNothing(GameTime gametime)
+        {
+            if (facingRight)
+                animationIdleRight.Update(gametime);
+            if (!facingRight)
+                animationIdleLeft.Update(gametime);
+        }
+        private void FallDead(GameTime gametime)
+        {
+            if (animationDieRight.UpdateFull(gametime))
             {
-                isAttacking = true;
-                for (int i = 0; i < animationAttackLeft.frames.Count; i++)
-                {
-                    if (facingRight)
-                        animationAttackRight.Update(gametime);
-                    if (!facingRight)
-                        animationAttackLeft.Update(gametime);
-                }
+                isDead = false;
             }
-
-            if (Keyboard.GetState().IsKeyUp(Keys.X))
-            {
-                isAttacking = false;
-            }
-
-            if (walkingSpeed == 0)
-            {
-                isIdle = true;
-                if (facingRight)
-                    animationIdleRight.Update(gametime);
-                if (!facingRight)
-                    animationIdleLeft.Update(gametime);
-            }
-            
-
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
