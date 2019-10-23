@@ -34,4 +34,24 @@ namespace ProjectMonoGame
 
         }
     }
+    class TileDrawer
+    {
+        public Texture2D tileSet { get; set; }
+        public int tileScale { get; set; }
+        public int tileWidth { get; set; }
+        public SpriteBatch spriteBatch { get; set; }
+
+        public TileDrawer(SpriteBatch spriteBatchIn, Texture2D tileSetIn, int tileScaleIn, int tileWidthIn = 32)
+        {
+            spriteBatch = spriteBatchIn;
+            tileSet = tileSetIn;
+            tileScale = tileScaleIn;
+            tileWidth = tileWidthIn;
+        }
+        public void DrawTile(Vector2 positionIn, Animation tileAniIn)
+        {
+            spriteBatch.Draw(tileSet, new Rectangle((int)positionIn.X, (int)positionIn.Y, tileWidth * tileScale, tileWidth * tileScale), tileAniIn.currentFrame.SourceRectangle, Color.White);
+        }
+    }
+
 }
