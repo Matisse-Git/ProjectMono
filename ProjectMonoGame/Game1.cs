@@ -10,12 +10,13 @@ namespace ProjectMonoGame
         SpriteBatch spriteBatch;
         Player finn;
         MushroomEnemy mushy;
+        CollisionManager colliManager;
         //Camera2D camera;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 
@@ -39,6 +40,7 @@ namespace ProjectMonoGame
 
             finn = new Player(new Vector2(20, 500), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
             mushy = new MushroomEnemy(new Vector2(1500, 500), mushroomSpritesheetLeft, mushroomSpritesheetRight);
+            colliManager = new CollisionManager();
 
             //camera = new Camera2D(GraphicsDevice.Viewport);
         }
@@ -55,6 +57,12 @@ namespace ProjectMonoGame
             finn.Update(gametime);
             mushy.Update(gametime);
             base.Update(gametime);
+            if (colliManager.CheckCollider(finn, mushy))
+            {
+                finn.position.X = 0;
+                mushy.position.X = 1500;
+            }
+
         }
 
         protected override void Draw(GameTime gameTime)

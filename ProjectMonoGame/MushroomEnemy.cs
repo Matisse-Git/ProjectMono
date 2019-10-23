@@ -9,11 +9,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ProjectMonoGame
 {
-    class MushroomEnemy
+    class MushroomEnemy : ICollidable
     {
+        public Rectangle collisionRectangle { get; set; }
+
         private Texture2D spritesheetLeft, spritesheetRight;
 
-        private Vector2 position;
+        public Vector2 position;
 
         private AnimationCreator aniCreator;
 
@@ -44,6 +46,8 @@ namespace ProjectMonoGame
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
 
+            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
+
             aniCreator = new AnimationCreator();
 
             animationIdleLeft = new Animation(175);
@@ -67,6 +71,7 @@ namespace ProjectMonoGame
 
         public void Update(GameTime gametime)
         {
+            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
             Move(gametime);
         }
 

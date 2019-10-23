@@ -10,8 +10,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ProjectMonoGame
 {
-    class Player
+    class Player : ICollidable
     {
+        public Rectangle collisionRectangle { get; set; }
 
         private Texture2D spritesheetLeft, spritesheetRight;
 
@@ -53,6 +54,8 @@ namespace ProjectMonoGame
 
             aniCreator = new AnimationCreator();
 
+            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
+
             animationIdleLeft = new Animation(175);
             animationWalkingLeft = new Animation(50);
             animationAttackLeft = new Animation(75);
@@ -82,6 +85,8 @@ namespace ProjectMonoGame
 
         public void Update (GameTime gametime)
         {
+            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
+
             switch (inputHandler.GetButtonPressed())
             {
                 case "Left":
