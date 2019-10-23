@@ -9,10 +9,17 @@ namespace ProjectMonoGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player finn;
+        MushroomEnemy mushy;
+        CollisionManager colliManager;
+        //Camera2D camera;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+
             Content.RootDirectory = "Content";
         }
 
@@ -25,11 +32,17 @@ namespace ProjectMonoGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D spritesheetLeft = Content.Load<Texture2D>("FinnSpriteLeft");
-            Texture2D spritesheetRight = Content.Load<Texture2D>("FinnSpriteRight");
+            Texture2D finnSpritesheetLeft = Content.Load<Texture2D>("FinnSpriteLeft");
+            Texture2D finnSpritesheetRight = Content.Load<Texture2D>("FinnSpriteRight");
 
-            finn = new Player(new Vector2(20, 200), spritesheetLeft, spritesheetRight, new KeyboardHandler());
+            Texture2D mushroomSpritesheetLeft = Content.Load<Texture2D>("MushroomLeft");
+            Texture2D mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
 
+            finn = new Player(new Vector2(20, 500), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
+            mushy = new MushroomEnemy(new Vector2(1500, 500), mushroomSpritesheetLeft, mushroomSpritesheetRight);
+            colliManager = new CollisionManager();
+
+            //camera = new Camera2D(GraphicsDevice.Viewport);
         }
 
         protected override void UnloadContent()
@@ -42,14 +55,25 @@ namespace ProjectMonoGame
                 Exit();
 
             finn.Update(gametime);
+            mushy.Update(gametime);
             base.Update(gametime);
+            if (colliManager.CheckCollider(finn, mushy))
+            {
+                finn.position.X = 0;
+                mushy.position.X = 1500;
+            }
+
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            //var viewMatrix = camera.GetViewMatrix();
+            //camera.position = finn.position;
+
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            mushy.Draw(spriteBatch);
             finn.Draw(spriteBatch);
             spriteBatch.End();
 

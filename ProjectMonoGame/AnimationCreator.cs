@@ -9,7 +9,7 @@ namespace ProjectMonoGame
 {
     class AnimationCreator
     {
-        public void CreateAniRight(Animation aniIn, int beginSprite, int endSprite, int aniSpeedIn = 150, int spriteWidthIn = 32)
+        public void CreateAniRight(Animation aniIn, int beginSprite, int endSprite, int spriteWidthIn = 32)
         {
             for (int i = beginSprite; i < endSprite + 1; i++)
             {
@@ -17,7 +17,7 @@ namespace ProjectMonoGame
             }
         }
 
-        public void CreateAniLeft(Animation aniIn, int beginSprite, int endSprite, int aniSpeedIn = 150, int spritesheetWidthIn = 896, int spriteWidthIn = 32)
+        public void CreateAniLeft(Animation aniIn, int beginSprite, int endSprite, int spritesheetWidthIn = 896, int spriteWidthIn = 32)
         {
             for (int i = beginSprite; i < endSprite + 1; i++)
             {
