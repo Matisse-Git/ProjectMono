@@ -10,15 +10,17 @@ namespace ProjectMonoGame
 {
     class Animation
     {
-        private List<AnimationFrame> frames;
+        public  List<AnimationFrame> frames;
         public AnimationFrame currentFrame;
         private double xOffset;
         int counter = 0;
+        int animationSpeed;
 
-        public Animation()
+        public Animation(int animationSpeedIn)
         {
             frames = new List<AnimationFrame>();
             xOffset = 0;
+            animationSpeed = animationSpeedIn;
         }
         public void AddFrame(Rectangle rectangle)
         {
@@ -29,9 +31,9 @@ namespace ProjectMonoGame
             frames.Add(frame);
             currentFrame = frames[0];
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gametime)
         {
-            xOffset += (float)currentFrame.SourceRectangle.Width * gameTime.ElapsedGameTime.Milliseconds / 175;
+            xOffset += (float)currentFrame.SourceRectangle.Width * gametime.ElapsedGameTime.Milliseconds / animationSpeed;
             if (xOffset >= currentFrame.SourceRectangle.Width)
             {
                 counter++;
@@ -41,6 +43,25 @@ namespace ProjectMonoGame
                 currentFrame = frames[counter];
                 xOffset = 0;
             }
+        }
+
+       
+        public bool UpdateFull(GameTime gametime)
+        {
+            xOffset += (float)currentFrame.SourceRectangle.Width * gametime.ElapsedGameTime.Milliseconds / animationSpeed;
+            if (xOffset >= currentFrame.SourceRectangle.Width)
+            {
+                counter++;
+                if (counter >= frames.Count)
+                {
+                    counter = 0;
+                    return true;
+                }
+
+                currentFrame = frames[counter];
+                xOffset = 0;
+            }
+            return false;
         }
     }
 }

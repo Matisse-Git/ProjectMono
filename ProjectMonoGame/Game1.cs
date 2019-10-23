@@ -28,7 +28,7 @@ namespace ProjectMonoGame
             Texture2D spritesheetLeft = Content.Load<Texture2D>("FinnSpriteLeft");
             Texture2D spritesheetRight = Content.Load<Texture2D>("FinnSpriteRight");
 
-            finn = new Player(new Vector2(20, 200), spritesheetLeft, spritesheetRight);
+            finn = new Player(new Vector2(20, 200), spritesheetLeft, spritesheetRight, new KeyboardHandler());
 
         }
 
