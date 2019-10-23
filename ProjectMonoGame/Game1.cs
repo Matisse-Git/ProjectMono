@@ -38,6 +38,8 @@ namespace ProjectMonoGame
             Texture2D mushroomSpritesheetLeft = Content.Load<Texture2D>("MushroomLeft");
             Texture2D mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
 
+            Texture2D platformSpriteSheet = Content.Load<Texture2D>("TileSet");
+
             finn = new Player(new Vector2(20, 500), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
             mushy = new MushroomEnemy(new Vector2(1500, 500), mushroomSpritesheetLeft, mushroomSpritesheetRight);
             colliManager = new CollisionManager();
