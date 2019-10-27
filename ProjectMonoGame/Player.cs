@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ProjectMonoGame
 {
-    class Player : ICollidable
+    class Player : ICollidable, IGravitational
     {
         public Rectangle collisionRectangle { get; set; }
 
@@ -31,6 +31,9 @@ namespace ProjectMonoGame
 
         private IController inputHandler;
 
+        private CollisionManager colliManager;
+
+        public int gravity { get; set; } = 4;
         private float walkingSpeed = 0;
         private float walkingSpeedAssign = 8;
         private int spriteWidth = 32;
@@ -40,6 +43,7 @@ namespace ProjectMonoGame
         private bool facingRight = true;
         private bool isIdle = true;
         private bool isJumping;
+        private bool isGrounded = false;
         private bool isAttacking;
         private bool isDead = false;
 
@@ -53,6 +57,8 @@ namespace ProjectMonoGame
             spritesheetRight = textureInRight;
 
             aniCreator = new AnimationCreator();
+
+            colliManager = new CollisionManager();
 
             collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
 
@@ -116,6 +122,8 @@ namespace ProjectMonoGame
             {
                 DoAttack(gametime);
             }
+
+            ApplyGravity(isGrounded);
         }
 
         private void DoAttack(GameTime gametime)
@@ -170,6 +178,24 @@ namespace ProjectMonoGame
             if (animationDieRight.UpdateFull(gametime))
             {
                 isDead = false;
+            }
+        }
+        public void ApplyGravity(bool isGroundedIn)
+        {
+            position.Y += 0;
+        }
+
+        public bool CheckCollision(Rectangle rectangleIn)
+        {
+            if (colliManager.CheckCollider(collisionRectangle, rectangleIn))
+            {
+                isGrounded = true;
+                return true;
+            }
+            else
+            {
+                isGrounded = false;
+                return false;
             }
         }
 

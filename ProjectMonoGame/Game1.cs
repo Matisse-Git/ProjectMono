@@ -11,7 +11,7 @@ namespace ProjectMonoGame
         SpriteBatch spriteBatch;
         Player finn;
         MushroomEnemy mushy;
-        CollisionManager colliManager;
+        Level levelOne;
         //Camera2D camera;
 
         public Game1()
@@ -41,9 +41,17 @@ namespace ProjectMonoGame
 
             Texture2D platformSpriteSheet = Content.Load<Texture2D>("TileSet");
 
+            byte[,] byteArrLevelOne = new byte[,]
+            {
+               { 0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0 },
+               {1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,1,1,1,0,0,0,1,1,1,0,1,1,1,1,1 }
+            };
+
+            levelOne = new Level(platformSpriteSheet,byteArrLevelOne);
+            levelOne.CreateLevel();
+
             finn = new Player(new Vector2(20, 500), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
             mushy = new MushroomEnemy(new Vector2(1500, 500), mushroomSpritesheetLeft, mushroomSpritesheetRight);
-            colliManager = new CollisionManager();
 
             //camera = new Camera2D(GraphicsDevice.Viewport);
         }
@@ -57,15 +65,13 @@ namespace ProjectMonoGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (finn.CheckCollision(mushy.collisionRectangle))
+            {
+                finn.position.X = 0;
+            }
             finn.Update(gametime);
             mushy.Update(gametime);
             base.Update(gametime);
-            if (colliManager.CheckCollider(finn, mushy))
-            {
-                finn.position.X = 0;
-                mushy.position.X = 1500;
-            }
-
         }
 
         protected override void Draw(GameTime gameTime)
@@ -76,6 +82,7 @@ namespace ProjectMonoGame
             //camera.position = finn.position;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            levelOne.DrawLevel(spriteBatch);
             mushy.Draw(spriteBatch);
             finn.Draw(spriteBatch);
             spriteBatch.End();

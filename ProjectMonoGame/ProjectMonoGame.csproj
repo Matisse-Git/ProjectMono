@@ -49,6 +49,8 @@
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="IGravitational.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="MushroomEnemy.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
