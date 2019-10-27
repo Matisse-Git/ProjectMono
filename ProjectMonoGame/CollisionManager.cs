@@ -14,9 +14,9 @@ namespace ProjectMonoGame
 
     public class CollisionManager
     {
-        public bool CheckCollider(ICollidable source, ICollidable target)
+        public bool CheckCollider(Rectangle source, Rectangle target)
         {
-            if (source.collisionRectangle.Intersects(target.collisionRectangle))
+            if (source.Intersects(target))
                 return true;
             return false;
         }
