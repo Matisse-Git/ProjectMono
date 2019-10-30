@@ -27,6 +27,7 @@ namespace ProjectMonoGame
         public int tileScale { get; set; } = 4;
         public int tileWidth { get; set; } = 16;
 
+        private int offset = 20;
         private int tileSetWidth = 240;
         private int tileSetHeight = 48;
         private Texture2D tileSet;
@@ -35,7 +36,7 @@ namespace ProjectMonoGame
 
         public NormalTile(Vector2 positionIn, Texture2D tileSetIn)
         {
-            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, tileWidth * tileScale, tileWidth * tileScale);
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, tileWidth * tileScale, tileWidth * tileScale);
             tile = new Animation(999);
             tile.AddFrame(new Rectangle((tileWidth * 1), (tileWidth * 0), tileWidth, tileWidth));
             
@@ -45,7 +46,7 @@ namespace ProjectMonoGame
 
         public void UpdateCollision()
         {
-            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, tileWidth * tileScale, tileWidth * tileScale);
+            //collisionRectangle = new Rectangle((int)position.X, (int)position.Y, tileWidth * tileScale, tileWidth * tileScale);
         }
 
         public void Draw(SpriteBatch spriteBatch)

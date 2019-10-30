@@ -47,7 +47,7 @@ namespace ProjectMonoGame
                {1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,1,1,1,0,0,0,1,1,1,0,1,1,1,1,1 }
             };
 
-            levelOne = new Level(platformSpriteSheet,byteArrLevelOne);
+            levelOne = new Level(platformSpriteSheet, byteArrLevelOne);
             levelOne.CreateLevel();
 
             finn = new Player(new Vector2(20, 500), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
@@ -65,12 +65,18 @@ namespace ProjectMonoGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (finn.CheckCollision(mushy.collisionRectangle))
+            foreach (ITile tile in levelOne.tileArr)
             {
-                finn.position.X = 0;
+                if (tile != null)
+                {
+                    finn.CheckCollision(tile.collisionRectangle);
+                }
             }
+
             finn.Update(gametime);
             mushy.Update(gametime);
+
+
             base.Update(gametime);
         }
 

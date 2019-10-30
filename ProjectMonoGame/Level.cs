@@ -28,7 +28,7 @@ namespace ProjectMonoGame
                 {
                     if (byteArr[i,j] == 1)
                     {
-                        tileArr[i, j] = new NormalTile(new Vector2(j * 16*4,800 + (i * (16*4))), tileSet);
+                        tileArr[i, j] = new NormalTile(new Vector2(j * 16 * 4, 800 + (i * (16 * 4))), tileSet);
                     }
                 }
             }

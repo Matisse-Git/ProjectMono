@@ -60,7 +60,7 @@ namespace ProjectMonoGame
 
             colliManager = new CollisionManager();
 
-            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
+            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, spriteWidth/2 * spriteScale, spriteWidth/2 * spriteScale);
 
             animationIdleLeft = new Animation(175);
             animationWalkingLeft = new Animation(50);
@@ -91,7 +91,7 @@ namespace ProjectMonoGame
 
         public void Update (GameTime gametime)
         {
-            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, 80, 80);
+            collisionRectangle = new Rectangle((int)position.X, (int)position.Y, spriteWidth/2 * spriteScale, spriteWidth/2 * spriteScale);
 
             switch (inputHandler.GetButtonPressed())
             {
@@ -123,7 +123,10 @@ namespace ProjectMonoGame
                 DoAttack(gametime);
             }
 
-            ApplyGravity(isGrounded);
+            if (!isGrounded)
+            {
+                ApplyGravity();
+            }
         }
 
         private void DoAttack(GameTime gametime)
@@ -180,22 +183,16 @@ namespace ProjectMonoGame
                 isDead = false;
             }
         }
-        public void ApplyGravity(bool isGroundedIn)
+        public void ApplyGravity()
         {
-            position.Y += 0;
+            position.Y += gravity;
         }
 
-        public bool CheckCollision(Rectangle rectangleIn)
+        public void CheckCollision(Rectangle rectangleIn)
         {
             if (colliManager.CheckCollider(collisionRectangle, rectangleIn))
             {
                 isGrounded = true;
-                return true;
-            }
-            else
-            {
-                isGrounded = false;
-                return false;
             }
         }
 
