@@ -17,8 +17,13 @@ namespace ProjectMonoGame
         public bool CheckCollider(Rectangle source, Rectangle target)
         {
             if (source.Intersects(target))
+            {
                 return true;
-            return false;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

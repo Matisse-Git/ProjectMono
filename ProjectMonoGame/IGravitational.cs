@@ -9,6 +9,6 @@ namespace ProjectMonoGame
     interface IGravitational
     {
         int gravity { get; set; }
-        void ApplyGravity(bool isGrounded);
+        void ApplyGravity();
     }
 }
