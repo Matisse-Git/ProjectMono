@@ -46,6 +46,14 @@ namespace ProjectMonoGame
                     {
                         tileArr[i, j] = new leftWallTile(new Vector2(j * 16 * 4, (i * (16 * 4))), tileSet);
                     }
+                    if (byteArr[i, j] == 6)
+                    {
+                        tileArr[i, j] = new groundToRightWallTile(new Vector2(j * 16 * 4, (i * (16 * 4))), tileSet);
+                    }
+                    if (byteArr[i, j] == 7)
+                    {
+                        tileArr[i, j] = new groundToLeftWallTile(new Vector2(j * 16 * 4, (i * (16 * 4))), tileSet);
+                    }
                 }
             }
         }

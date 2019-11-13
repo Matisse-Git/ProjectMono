@@ -100,8 +100,8 @@ namespace ProjectMonoGame
         public void Update (GameTime gametime)
         {
             downCollisionRectangle = new Rectangle((int)position.X + spriteWidth + 30, (int)position.Y, (spriteWidth * spriteScale) / 5, spriteWidth / 2 * spriteScale);
-            rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8)  * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 2);
-            leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 2);
+            rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8)  * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
+            leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
 
             switch (inputHandler.GetButtonPressed())
             {
