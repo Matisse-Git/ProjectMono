@@ -99,7 +99,7 @@ namespace ProjectMonoGame
 
         public void Update (GameTime gametime)
         {
-            downCollisionRectangle = new Rectangle(((int)position.X + spriteWidth / 2) + 25, (int)position.Y + spriteWidth/4, spriteWidth * spriteScale, spriteWidth / 2 * spriteScale);
+            downCollisionRectangle = new Rectangle((int)position.X + spriteWidth + 30, (int)position.Y, (spriteWidth * spriteScale) / 5, spriteWidth / 2 * spriteScale);
             rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8)  * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 2);
             leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 2);
 
@@ -116,6 +116,9 @@ namespace ProjectMonoGame
                 case "Jump":
                     isJumping = true;
                     Jump(gametime);
+                    break;
+                case "JumpKeyUp":
+
                     break;
                 case "LeftJump":
                 case "RightJump":
