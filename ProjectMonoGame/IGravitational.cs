@@ -8,7 +8,7 @@ namespace ProjectMonoGame
 {
     interface IGravitational
     {
-        int gravity { get; set; }
+        float gravity { get; set; }
         void ApplyGravity();
     }
 }

@@ -12,6 +12,14 @@ namespace ProjectMonoGame
         Rectangle collisionRectangle { get; set; }
     }
 
+    public interface IMultipleCollidable
+    {
+        Rectangle upCollisionRectangle { get; set; }
+        Rectangle downCollisionRectangle { get; set; }
+        Rectangle leftCollisionRectangle { get; set; }
+        Rectangle rightCollisionRectangle { get; set; }
+    }
+
     public class CollisionManager
     {
         public bool CheckCollider(Rectangle source, Rectangle target)

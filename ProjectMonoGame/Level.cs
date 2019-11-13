@@ -11,8 +11,8 @@ namespace ProjectMonoGame
     class Level
     {
         public Texture2D tileSet;
-        byte[,] byteArr = new byte[2,30];
-        public ITile[,] tileArr = new ITile[2,30];
+        byte[,] byteArr = new byte[20,30];
+        public ITile[,] tileArr = new ITile[20,30];
 
         public Level(Texture2D tileSetIn, byte[,] byteArrIn)
         {
@@ -22,13 +22,29 @@ namespace ProjectMonoGame
 
         public void CreateLevel()
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 20; i++)
             {
                 for (int j = 0; j < 30; j++)
                 {
                     if (byteArr[i,j] == 1)
                     {
-                        tileArr[i, j] = new NormalTile(new Vector2(j * 16 * 4, 800 + (i * (16 * 4))), tileSet);
+                        tileArr[i, j] = new NormalTile(new Vector2(j * 16 * 4, (i * (16 * 4))), tileSet);
+                    }
+                    if (byteArr[i,j] == 2)
+                    {
+                        tileArr[i, j] = new undergroundTile(new Vector2(j * 16 * 4,  (i * (16 * 4))), tileSet);
+                    }
+                    if (byteArr[i,j] == 3)
+                    {
+                        tileArr[i, j] = new floatingTile(new Vector2(j * 16 * 4,  (i * (16 * 4))), tileSet);
+                    }
+                    if (byteArr[i, j] == 4)
+                    {
+                        tileArr[i, j] = new rightWallTile(new Vector2(j * 16 * 4, (i * (16 * 4))), tileSet);
+                    }
+                    if (byteArr[i, j] == 5)
+                    {
+                        tileArr[i, j] = new leftWallTile(new Vector2(j * 16 * 4, (i * (16 * 4))), tileSet);
                     }
                 }
             }
@@ -36,7 +52,7 @@ namespace ProjectMonoGame
 
         public void DrawLevel(SpriteBatch spritebatch)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 20; i++)
             {
                 for (int j = 0; j < 30; j++)
                 {

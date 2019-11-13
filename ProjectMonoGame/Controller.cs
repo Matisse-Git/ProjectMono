@@ -19,10 +19,22 @@ namespace ProjectMonoGame
         public string GetButtonPressed()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                return "Left";
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    return "LeftJump";
+
+                else
+                    return "Left";
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                return "Right";
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    return "RightJump";
+
+                else
+                    return "Right";
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 return "Jump";

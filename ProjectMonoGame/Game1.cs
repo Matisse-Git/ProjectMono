@@ -10,7 +10,7 @@ namespace ProjectMonoGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player finn;
-        MushroomEnemy mushy;
+        //MushroomEnemy mushy;
         Level levelOne;
         //Camera2D camera;
 
@@ -43,15 +43,33 @@ namespace ProjectMonoGame
 
             byte[,] byteArrLevelOne = new byte[,]
             {
-               { 0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0 },
-               {1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,1,1,1,0,0,0,1,1,1,0,1,1,1,1,1 }
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5 },
+               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,3,0,0,0,0,0,0,0,0,5 },
+               {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
+               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 }
             };
 
             levelOne = new Level(platformSpriteSheet, byteArrLevelOne);
             levelOne.CreateLevel();
 
-            finn = new Player(new Vector2(20, 500), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
-            mushy = new MushroomEnemy(new Vector2(1500, 500), mushroomSpritesheetLeft, mushroomSpritesheetRight);
+            finn = new Player(new Vector2(600, 200), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
+            //mushy = new MushroomEnemy(new Vector2(1500, 500), mushroomSpritesheetLeft, mushroomSpritesheetRight);
 
             //camera = new Camera2D(GraphicsDevice.Viewport);
         }
@@ -67,15 +85,22 @@ namespace ProjectMonoGame
 
             foreach (ITile tile in levelOne.tileArr)
             {
-                if (tile != null)
+                if (tile is ICollidable)
                 {
-                    finn.CheckCollision(tile.collisionRectangle);
+                    if (tile != null)
+                    {
+                        if (finn.CheckCollision(tile.collisionRectangle))
+                        {
+                            break;
+                        }
+                    }
                 }
             }
 
             finn.Update(gametime);
-            mushy.Update(gametime);
+            //mushy.Update(gametime);
 
+            System.Console.WriteLine(finn.rightCollisionRectangle);
 
             base.Update(gametime);
         }
@@ -89,7 +114,7 @@ namespace ProjectMonoGame
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             levelOne.DrawLevel(spriteBatch);
-            mushy.Draw(spriteBatch);
+            //mushy.Draw(spriteBatch);
             finn.Draw(spriteBatch);
             spriteBatch.End();
 
