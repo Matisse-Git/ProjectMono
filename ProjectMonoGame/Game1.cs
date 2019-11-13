@@ -96,8 +96,18 @@ namespace ProjectMonoGame
                     }
                 }
             }
-
+            int counter = 0;
             finn.Update(gametime);
+            System.Console.WriteLine($"Finn Down: {finn.downCollisionRectangle}");
+            foreach (ITile floatingTile in levelOne.tileArr)
+            {
+                if (floatingTile is floatingTile)
+                {
+                    counter++;
+                    System.Console.WriteLine($"ft {counter + 1}: {floatingTile.collisionRectangle}");
+                }
+            }
+            
             //mushy.Update(gametime);
 
             System.Console.WriteLine(finn.rightCollisionRectangle);

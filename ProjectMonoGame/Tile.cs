@@ -14,7 +14,6 @@ namespace ProjectMonoGame
         Vector2 position { get; set; }
         int tileScale {get;set;}
         int tileWidth { get; set; }
-
         void Draw(SpriteBatch spriteBatch);
     }
 
