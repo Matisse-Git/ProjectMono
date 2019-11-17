@@ -22,7 +22,7 @@ namespace ProjectMonoGame
 
             backdropAni = new Animation(999);
 
-            backdropAni.AddFrame(new Rectangle(0, 0, 1920, 2000));
+            backdropAni.AddFrame(new Rectangle(0, 0, 200, 300));
         }
 
         public void Draw(SpriteBatch spritebatch)

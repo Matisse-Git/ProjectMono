@@ -12,6 +12,11 @@ namespace ProjectMonoGame
         Rectangle collisionRectangle { get; set; }
     }
 
+    public interface ILandable
+    {
+
+    }
+
     public interface IMultipleCollidable
     {
         Rectangle upCollisionRectangle { get; set; }

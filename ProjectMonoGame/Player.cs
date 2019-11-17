@@ -42,8 +42,8 @@ namespace ProjectMonoGame
         private float walkingSpeedAssign = 8;
         private int spriteWidth = 32;
         private int spritesheetWidth = 896;
-        private int spriteScale = 5;
-        private int offset = 20;
+        private int spriteScale = 4;
+        private int offset = 0;
         private double lastJumpTime = 0;
         private double jumpHeight = 20;
 
@@ -56,6 +56,7 @@ namespace ProjectMonoGame
         private bool isAttacking;
         private bool isDead = false;
         private bool isFalling;
+        private bool hasDoubleJump;
 
 
 
@@ -99,7 +100,7 @@ namespace ProjectMonoGame
 
         public void Update (GameTime gametime)
         {
-            downCollisionRectangle = new Rectangle((int)position.X + spriteWidth + 30, (int)position.Y, (spriteWidth * spriteScale) / 5, spriteWidth / 2 * spriteScale);
+            downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth*spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
             rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8)  * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
             leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
 
@@ -146,12 +147,9 @@ namespace ProjectMonoGame
             {
                 ApplyGravity();
             }
+            WallJump(gametime);
 
-
-            Console.WriteLine(rightColliding);
-            rightColliding = false;
-            leftColliding = false;
-
+            Reset();
         }
 
         private void DoAttack(GameTime gametime)
@@ -170,10 +168,10 @@ namespace ProjectMonoGame
 
         private void Walk(GameTime gametime)
         {
-            if (isFalling)
-            {
-                walkingSpeedAssign = 2;
-            }
+            //if (isFalling)
+            //{
+            //    walkingSpeedAssign = 2;
+            //}
             if (facingRight)
             {
                 walkingSpeed = walkingSpeedAssign;
@@ -198,7 +196,7 @@ namespace ProjectMonoGame
         {
             if (jumpHeight > 0)
             {
-                jumpHeight -= 0.5;
+                jumpHeight -= 0.35;
             }
             position.Y -= (float)jumpHeight;
             isGrounded = false;
@@ -226,11 +224,35 @@ namespace ProjectMonoGame
         }
         public void ApplyGravity()
         {
+            if (isFalling)
+            {
+                offset = 5000;
+            }
             if (gravity < 15)
             {
                 gravity += 0.3f;
             }
             position.Y += gravity;
+        }
+
+        public void WallJump(GameTime gametime)
+        {
+            if (isJumping && !isGrounded && !isIdle)
+            {
+                if (rightColliding)
+                {
+                    gravity = 3;
+                    jumpHeight = 15;
+                    facingRight = false;
+                }
+                if (leftColliding)
+                {
+                    gravity = 3;
+                    facingRight = true;
+                    jumpHeight = 15;
+                }
+
+            }
         }
 
         public bool CheckCollision(Rectangle rectangleIn)
@@ -258,6 +280,7 @@ namespace ProjectMonoGame
                 jumpHeight = 15;
                 gravity = 0;
                 isFalling = false;
+                hasDoubleJump = true;
                 return true;
             }
             else
@@ -267,6 +290,13 @@ namespace ProjectMonoGame
                 return false;
             }
 
+        }
+
+        public void Reset()
+        {
+            rightColliding = false;
+            leftColliding = false;
+            offset = 0;
         }
 
         public void Draw(SpriteBatch spriteBatch)

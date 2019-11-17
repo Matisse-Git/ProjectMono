@@ -17,14 +17,14 @@ namespace ProjectMonoGame
         void Draw(SpriteBatch spriteBatch);
     }
 
-    public class NormalTile : ITile, ICollidable
+    public class NormalTile : ITile, ICollidable, ILandable
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
-        private int offset = 10;
+        private int offset = 0;
         private int tileSetWidth = 240;
         private int tileSetHeight = 48;
         private Texture2D tileSet;
@@ -53,7 +53,7 @@ namespace ProjectMonoGame
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 30;
@@ -81,10 +81,11 @@ namespace ProjectMonoGame
 
     }
 
-    public class floatingTile : ITile, ICollidable {
+    public class floatingTile : ITile, ICollidable, ILandable
+    {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -117,7 +118,7 @@ namespace ProjectMonoGame
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -150,7 +151,7 @@ namespace ProjectMonoGame
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -178,11 +179,11 @@ namespace ProjectMonoGame
         }
     }
 
-    public class groundToLeftWallTile : ITile, ICollidable
+    public class groundToLeftWallTile : ITile, ICollidable, ILandable
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -210,11 +211,11 @@ namespace ProjectMonoGame
         }
     }
 
-    public class groundToRightWallTile : ITile, ICollidable
+    public class groundToRightWallTile : ITile, ICollidable, ILandable
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -242,11 +243,11 @@ namespace ProjectMonoGame
         }
     }
 
-    public class roofToRightWall : ITile, ICollidable
+    public class roofToRightWall : ITile, ICollidable, ILandable
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -274,11 +275,11 @@ namespace ProjectMonoGame
         }
     }
 
-    public class roofToLeftWall : ITile, ICollidable
+    public class roofToLeftWall : ITile, ICollidable, ILandable
     {
         public Rectangle collisionRectangle { get; set; }
         public Vector2 position { get; set; }
-        public int tileScale { get; set; } = 4;
+        public int tileScale { get; set; } = 3;
         public int tileWidth { get; set; } = 16;
 
         private int offset = 10;
@@ -293,6 +294,166 @@ namespace ProjectMonoGame
             collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
             tile = new Animation(999);
             tile.AddFrame(new Rectangle((tileWidth * 12), (tileWidth * 1), tileWidth, tileWidth));
+
+            position = positionIn;
+            tileSet = tileSetIn;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
+
+            tileDrawer.DrawTile(position, tile);
+        }
+    }
+
+    public class rightWallToGround : ITile, ICollidable, ILandable
+    {
+        public Rectangle collisionRectangle { get; set; }
+        public Vector2 position { get; set; }
+        public int tileScale { get; set; } = 3;
+        public int tileWidth { get; set; } = 16;
+
+        private int offset = 10;
+        private int tileSetWidth = 240;
+        private int tileSetHeight = 48;
+        private Texture2D tileSet;
+        private Animation tile;
+        private TileDrawer tileDrawer;
+
+        public rightWallToGround(Vector2 positionIn, Texture2D tileSetIn)
+        {
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            tile = new Animation(999);
+            tile.AddFrame(new Rectangle((tileWidth * 0), (tileWidth * 0), tileWidth, tileWidth));
+
+            position = positionIn;
+            tileSet = tileSetIn;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
+
+            tileDrawer.DrawTile(position, tile);
+        }
+    }
+
+    public class leftWallToGround : ITile, ICollidable, ILandable
+    {
+        public Rectangle collisionRectangle { get; set; }
+        public Vector2 position { get; set; }
+        public int tileScale { get; set; } = 3;
+        public int tileWidth { get; set; } = 16;
+
+        private int offset = 10;
+        private int tileSetWidth = 240;
+        private int tileSetHeight = 48;
+        private Texture2D tileSet;
+        private Animation tile;
+        private TileDrawer tileDrawer;
+
+        public leftWallToGround(Vector2 positionIn, Texture2D tileSetIn)
+        {
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            tile = new Animation(999);
+            tile.AddFrame(new Rectangle((tileWidth * 2), (tileWidth * 0), tileWidth, tileWidth));
+
+            position = positionIn;
+            tileSet = tileSetIn;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
+
+            tileDrawer.DrawTile(position, tile);
+        }
+    }
+
+    public class longFloatingLeftTIle : ITile, ICollidable, ILandable
+    {
+        public Rectangle collisionRectangle { get; set; }
+        public Vector2 position { get; set; }
+        public int tileScale { get; set; } = 3;
+        public int tileWidth { get; set; } = 16;
+
+        private int offset = 10;
+        private int tileSetWidth = 240;
+        private int tileSetHeight = 48;
+        private Texture2D tileSet;
+        private Animation tile;
+        private TileDrawer tileDrawer;
+
+        public longFloatingLeftTIle(Vector2 positionIn, Texture2D tileSetIn)
+        {
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            tile = new Animation(999);
+            tile.AddFrame(new Rectangle((tileWidth * 3), (tileWidth * 1), tileWidth, tileWidth));
+
+            position = positionIn;
+            tileSet = tileSetIn;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
+
+            tileDrawer.DrawTile(position, tile);
+        }
+    }
+
+    public class longFloatingCenterTile : ITile, ICollidable, ILandable
+    {
+        public Rectangle collisionRectangle { get; set; }
+        public Vector2 position { get; set; }
+        public int tileScale { get; set; } = 3;
+        public int tileWidth { get; set; } = 16;
+
+        private int offset = 10;
+        private int tileSetWidth = 240;
+        private int tileSetHeight = 48;
+        private Texture2D tileSet;
+        private Animation tile;
+        private TileDrawer tileDrawer;
+
+        public longFloatingCenterTile(Vector2 positionIn, Texture2D tileSetIn)
+        {
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            tile = new Animation(999);
+            tile.AddFrame(new Rectangle((tileWidth * 4), (tileWidth * 1), tileWidth, tileWidth));
+
+            position = positionIn;
+            tileSet = tileSetIn;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
+
+            tileDrawer.DrawTile(position, tile);
+        }
+    }
+
+    public class longFloatingRightTile : ITile, ICollidable, ILandable
+    {
+        public Rectangle collisionRectangle { get; set; }
+        public Vector2 position { get; set; }
+        public int tileScale { get; set; } = 3;
+        public int tileWidth { get; set; } = 16;
+
+        private int offset = 10;
+        private int tileSetWidth = 240;
+        private int tileSetHeight = 48;
+        private Texture2D tileSet;
+        private Animation tile;
+        private TileDrawer tileDrawer;
+
+        public longFloatingRightTile(Vector2 positionIn, Texture2D tileSetIn)
+        {
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            tile = new Animation(999);
+            tile.AddFrame(new Rectangle((tileWidth * 5), (tileWidth * 1), tileWidth, tileWidth));
 
             position = positionIn;
             tileSet = tileSetIn;
