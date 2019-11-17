@@ -22,10 +22,10 @@ namespace ProjectMonoGame
 
         public Vector2 position;
 
-        private Animation animationIdleLeft, animationWalkingLeft, 
-                          animationAttackLeft, animationHitLeft, 
+        private Animation animationIdleLeft, animationWalkingLeft,
+                          animationAttackLeft, animationHitLeft,
                           animationJumpLeft, animationIdleRight,
-                          animationWalkingRight, animationAttackRight, 
+                          animationWalkingRight, animationAttackRight,
                           animationHitRight, animationJumpRight,
                           animationDieRight, animationDieLeft;
 
@@ -37,16 +37,13 @@ namespace ProjectMonoGame
 
         private CollisionManager colliManager;
 
-        public float gravity { get; set; } = 4;
-        private float walkingSpeed = 0;
-        private float walkingSpeedAssign = 8;
-        private int spriteWidth = 32;
-        private int spritesheetWidth = 896;
-        private int spriteScale = 4;
-        private int offset = 0;
-        private double lastJumpTime = 0;
-        private double jumpHeight = 20;
 
+        //Sprite Related
+        private int spriteWidth = 32;
+        private int spriteScale = 4;
+
+
+        //Movement Related
         private bool leftColliding;
         private bool rightColliding;
         private bool facingRight = true;
@@ -56,7 +53,12 @@ namespace ProjectMonoGame
         private bool isAttacking;
         private bool isDead = false;
         private bool isFalling;
-        private bool hasDoubleJump;
+
+        public float gravity { get; set; } = 4;
+        private float walkingSpeed = 0;
+        private float walkingSpeedAssign = 8;
+        private double jumpHeight = 20;
+
 
 
 
@@ -98,12 +100,23 @@ namespace ProjectMonoGame
             aniCreator.CreateAniRight(animationDieRight, 18, 22);
         }
 
-        public void Update (GameTime gametime)
+        public void Update(GameTime gametime, ITile[,] tilesIn)
         {
-            downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth*spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
-            rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8)  * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
+            downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
+            rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
             leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
 
+            CheckCollision(tilesIn);
+            HandleMovement(gametime);
+            WallJump(gametime);
+            ApplyGravity();
+            DoAttack(gametime);
+
+            Reset();
+        }
+
+        private void HandleMovement(GameTime gametime)
+        {
             switch (inputHandler.GetButtonPressed())
             {
                 case "Left":
@@ -137,41 +150,27 @@ namespace ProjectMonoGame
                     break;
             }
 
-            //When using a full animation by one press of the button, you have to use it like this, otherwise it will not work!!
-            if (isAttacking)
-            {
-                DoAttack(gametime);
-            }
-
-            if (!isGrounded)
-            {
-                ApplyGravity();
-            }
-            WallJump(gametime);
-
-            Reset();
         }
 
         private void DoAttack(GameTime gametime)
         {
-            if (facingRight)
+            if (isAttacking)
             {
-                if (animationAttackRight.UpdateFull(gametime))
-                    isAttacking = false;
-            }
-            if (!facingRight)
-            {
-                if (animationAttackLeft.UpdateFull(gametime))
-                    isAttacking = false;
+                if (facingRight)
+                {
+                    if (animationAttackRight.UpdateFull(gametime))
+                        isAttacking = false;
+                }
+                if (!facingRight)
+                {
+                    if (animationAttackLeft.UpdateFull(gametime))
+                        isAttacking = false;
+                }
             }
         }
 
         private void Walk(GameTime gametime)
         {
-            //if (isFalling)
-            //{
-            //    walkingSpeedAssign = 2;
-            //}
             if (facingRight)
             {
                 walkingSpeed = walkingSpeedAssign;
@@ -187,7 +186,7 @@ namespace ProjectMonoGame
 
             if ((!rightColliding && facingRight) || (!leftColliding && !facingRight))
             {
-                    position.X += walkingSpeed;
+                position.X += walkingSpeed;
             }
             walkingSpeedAssign = 8;
         }
@@ -204,8 +203,6 @@ namespace ProjectMonoGame
                 animationJumpRight.Update(gametime);
             if (!facingRight)
                 animationJumpLeft.Update(gametime);
-
-            lastJumpTime = gametime.ElapsedGameTime.Milliseconds;
         }
 
         private void DoNothing(GameTime gametime)
@@ -224,18 +221,17 @@ namespace ProjectMonoGame
         }
         public void ApplyGravity()
         {
-            if (isFalling)
+            if (!isGrounded)
             {
-                offset = 5000;
+                if (gravity < 15)
+                {
+                    gravity += 0.3f;
+                }
+                position.Y += gravity;
             }
-            if (gravity < 15)
-            {
-                gravity += 0.3f;
-            }
-            position.Y += gravity;
         }
 
-        public void WallJump(GameTime gametime)
+        private void WallJump(GameTime gametime)
         {
             if (isJumping && !isGrounded && !isIdle)
             {
@@ -255,48 +251,52 @@ namespace ProjectMonoGame
             }
         }
 
-        public bool CheckCollision(Rectangle rectangleIn)
+        private void CheckCollision(ITile[,] tilesIn)
         {
-
-            if (colliManager.CheckCollider(rightCollisionRectangle, rectangleIn))
+            foreach (ITile tile in tilesIn)
             {
-                rightColliding = true;
-            }
+                if (tile is ICollidable)
+                {
+                    if (tile != null)
+                    {
+                        if (colliManager.CheckCollider(rightCollisionRectangle, tile.collisionRectangle))
+                        {
+                            rightColliding = true;
+                        }
 
-            if (colliManager.CheckCollider(leftCollisionRectangle, rectangleIn))
-            {
-                leftColliding = true;
-            }
+                        if (colliManager.CheckCollider(leftCollisionRectangle, tile.collisionRectangle))
+                        {
+                            leftColliding = true;
+                        }
 
-            if (gravity >= 12)
-            {
-                isFalling = true;
-            }
+                        if (gravity >= 12)
+                        {
+                            isFalling = true;
+                        }
 
-            if (colliManager.CheckCollider(downCollisionRectangle, rectangleIn))
-            {
-                isGrounded = true;
-                isJumping = false;
-                jumpHeight = 15;
-                gravity = 0;
-                isFalling = false;
-                hasDoubleJump = true;
-                return true;
+                        if (colliManager.CheckCollider(downCollisionRectangle, tile.collisionRectangle))
+                        {
+                            isGrounded = true;
+                            isJumping = false;
+                            jumpHeight = 15;
+                            gravity = 0;
+                            isFalling = false;
+                            break;
+                        }
+                        else
+                        {
+                            isGrounded = false;
+                            isJumping = true;
+                        }
+                    }
+                }
             }
-            else
-            {
-                isGrounded = false;
-                isJumping = true;
-                return false;
-            }
-
         }
 
-        public void Reset()
+        private void Reset()
         {
             rightColliding = false;
             leftColliding = false;
-            offset = 0;
         }
 
         public void Draw(SpriteBatch spriteBatch)

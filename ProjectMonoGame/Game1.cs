@@ -90,26 +90,8 @@ namespace ProjectMonoGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            foreach (ITile tile in levelOne.tileArr)
-            {
-                if (tile is ICollidable)
-                {
-                    if (tile != null)
-                    {
-                        if (finn.CheckCollision(tile.collisionRectangle))
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-            int counter = 0;
-            finn.Update(gametime);
+            finn.Update(gametime, levelOne.tileArr);
             
-            //mushy.Update(gametime);
-
-            System.Console.WriteLine(finn.rightCollisionRectangle);
-
             base.Update(gametime);
         }
 
@@ -117,14 +99,12 @@ namespace ProjectMonoGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //var viewMatrix = camera.GetViewMatrix();
-            //camera.position = finn.position;
-
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+
             backdropOne.Draw(spriteBatch);
             levelOne.DrawLevel(spriteBatch);
-            //mushy.Draw(spriteBatch);
             finn.Draw(spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
