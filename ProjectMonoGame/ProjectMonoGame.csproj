@@ -41,22 +41,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
-    <Compile Include="AnimationCreator.cs" />
-    <Compile Include="AnimationFrame.cs" />
-    <Compile Include="Backdrop.cs" />
-    <Compile Include="BatchDrawer.cs" />
-    <Compile Include="Camera2D.cs" />
-    <Compile Include="CollisionManager.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="BackgroundClasses\Animation.cs" />
+    <Compile Include="BackgroundClasses\AnimationCreator.cs" />
+    <Compile Include="BackgroundClasses\AnimationFrame.cs" />
+    <Compile Include="BackgroundClasses\Backdrop.cs" />
+    <Compile Include="BackgroundClasses\BatchDrawer.cs" />
+    <Compile Include="BackgroundClasses\CollisionManager.cs" />
+    <Compile Include="Interfaces\Controller.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="IGravitational.cs" />
-    <Compile Include="Level.cs" />
-    <Compile Include="MushroomEnemy.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Interfaces\IGravitational.cs" />
+    <Compile Include="BackgroundClasses\Level.cs" />
+    <Compile Include="LivingObjects\MushroomEnemy.cs" />
+    <Compile Include="LivingObjects\Player.cs" />
+    <Compile Include="BackgroundClasses\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="Interfaces\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -72,9 +71,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BackgroundClasses\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
