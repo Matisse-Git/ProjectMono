@@ -16,20 +16,28 @@ namespace ProjectMonoGame
 
         private Animation backdropAni;
 
-        public Backdrop(Texture2D backdropIn)
+        private int scale;
+        private int width;
+        private int counter = 0;
+        public Vector2 position;
+
+        public Backdrop(Texture2D backdropIn, int frameWidthIn, int frameHeightIn, int scaleIn, int widthIn, Vector2 positionIn)
         {
             backdrop = backdropIn;
+            scale = scaleIn;
+            width = widthIn;
+            position = positionIn;
 
             backdropAni = new Animation(999);
 
-            backdropAni.AddFrame(new Rectangle(0, 0, 200, 300));
+            backdropAni.AddFrame(new Rectangle((int)positionIn.X, (int)positionIn.Y, frameWidthIn, frameHeightIn));
         }
 
         public void Draw(SpriteBatch spritebatch)
         {
-            backdropDrawer = new BatchDrawer(spritebatch, backdrop, backdrop, 1, 1920);
+            backdropDrawer = new BatchDrawer(spritebatch, backdrop, backdrop, scale, width);
 
-            backdropDrawer.DrawAni(true, new Vector2(0, 0), backdropAni, backdropAni);
+            backdropDrawer.DrawAni(true, new Vector2(0,0), backdropAni, backdropAni);
 
         }
     }

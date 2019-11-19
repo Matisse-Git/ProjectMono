@@ -53,6 +53,12 @@ namespace ProjectMonoGame
         private bool isAttacking;
         private bool isDead = false;
         private bool isFalling;
+        private bool holdingRight;
+        private bool holdingSpace;
+        public bool goalReached;
+
+        bool canWallJump = true;
+        int count = 0;
 
         public float gravity { get; set; } = 4;
         private float walkingSpeed = 0;
@@ -77,13 +83,13 @@ namespace ProjectMonoGame
             animationWalkingLeft = new Animation(50);
             animationAttackLeft = new Animation(75);
             animationHitLeft = new Animation(50);
-            animationDieLeft = new Animation(75);
+            animationDieLeft = new Animation(200);
             animationJumpLeft = new Animation(100);
             animationIdleRight = new Animation(175);
             animationWalkingRight = new Animation(50);
             animationAttackRight = new Animation(75);
             animationHitRight = new Animation(50);
-            animationDieRight = new Animation(75);
+            animationDieRight = new Animation(200);
             animationJumpRight = new Animation(100);
 
             aniCreator.CreateAniLeft(animationIdleLeft, 1, 9);
@@ -107,10 +113,16 @@ namespace ProjectMonoGame
             leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
 
             CheckCollision(tilesIn);
-            HandleMovement(gametime);
-            WallJump(gametime);
-            ApplyGravity();
-            DoAttack(gametime);
+
+            if (!isDead)
+            {
+                ApplyGravity();
+                HandleMovement(gametime);
+                WallJump(gametime);
+                DoAttack(gametime);
+                FinishPose(gametime);
+            }
+            FallDead(gametime);
 
             Reset();
         }
@@ -121,21 +133,32 @@ namespace ProjectMonoGame
             {
                 case "Left":
                     facingRight = false;
+                    holdingRight = false;
                     Walk(gametime);
                     break;
                 case "Right":
                     facingRight = true;
+                    holdingRight = true;
                     Walk(gametime);
                     break;
                 case "Jump":
+                    canWallJump = true;
+                    holdingSpace = true;
                     isJumping = true;
                     Jump(gametime);
                     break;
-                case "JumpKeyUp":
-
-                    break;
                 case "LeftJump":
+                    holdingSpace = true;
+                    holdingRight = false;
+                    facingRight = false;
+                    isJumping = true;
+                    Jump(gametime);
+                    Walk(gametime);
+                    break;
                 case "RightJump":
+                    holdingSpace = true;
+                    holdingRight = true;
+                    facingRight = true;
                     isJumping = true;
                     Jump(gametime);
                     Walk(gametime);
@@ -214,9 +237,26 @@ namespace ProjectMonoGame
         }
         private void FallDead(GameTime gametime)
         {
-            if (animationDieRight.UpdateFull(gametime))
+            if (isDead)
             {
-                isDead = false;
+                if (facingRight)
+                {
+                    if (animationDieRight.UpdateFull(gametime))
+                    {
+                        position.X = 50;
+                        position.Y = 900;
+                        isDead = false;
+                    }
+                }
+                if (!facingRight)
+                {
+                    if (animationDieLeft.UpdateFull(gametime))
+                    {
+                        position.X = 50;
+                        position.Y = 900;
+                        isDead = false;
+                    }
+                }
             }
         }
         public void ApplyGravity()
@@ -230,7 +270,6 @@ namespace ProjectMonoGame
                 position.Y += gravity;
             }
         }
-
         private void WallJump(GameTime gametime)
         {
             if (isJumping && !isGrounded && !isIdle)
@@ -238,16 +277,21 @@ namespace ProjectMonoGame
                 if (rightColliding)
                 {
                     gravity = 3;
-                    jumpHeight = 15;
                     facingRight = false;
+                    if (!holdingRight)
+                    {
+                        jumpHeight = 15;
+                    }
                 }
                 if (leftColliding)
                 {
                     gravity = 3;
                     facingRight = true;
-                    jumpHeight = 15;
+                    if (holdingRight)
+                    {
+                        jumpHeight = 15;
+                    }
                 }
-
             }
         }
 
@@ -262,11 +306,21 @@ namespace ProjectMonoGame
                         if (colliManager.CheckCollider(rightCollisionRectangle, tile.collisionRectangle))
                         {
                             rightColliding = true;
+                            jumpHeight = 2;
+                            if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
+                            {
+                                goalReached = true;
+                            }
                         }
 
                         if (colliManager.CheckCollider(leftCollisionRectangle, tile.collisionRectangle))
                         {
                             leftColliding = true;
+                            jumpHeight = 2;
+                            if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
+                            {
+                                goalReached = true;
+                            }
                         }
 
                         if (gravity >= 12)
@@ -276,12 +330,24 @@ namespace ProjectMonoGame
 
                         if (colliManager.CheckCollider(downCollisionRectangle, tile.collisionRectangle))
                         {
-                            isGrounded = true;
-                            isJumping = false;
-                            jumpHeight = 15;
-                            gravity = 0;
-                            isFalling = false;
-                            break;
+                            if (tile is spikeTile)
+                            {
+                                isDead = true;
+                            }
+                            if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour) 
+                            {
+                                goalReached = true;
+                            }
+                            else
+                            {
+
+                                isGrounded = true;
+                                isJumping = false;
+                                jumpHeight = 15;
+                                gravity = 0;
+                                isFalling = false;
+                                break;
+                            }
                         }
                         else
                         {
@@ -293,34 +359,53 @@ namespace ProjectMonoGame
             }
         }
 
+        public void FinishPose(GameTime gametime)
+        {
+            if (goalReached)
+            {
+                position.X = 50;
+                position.Y = 900;
+            }
+        }
+
         private void Reset()
         {
             rightColliding = false;
             leftColliding = false;
+            holdingSpace = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             finnDrawer = new BatchDrawer(spriteBatch, spritesheetLeft, spritesheetRight, spriteScale);
 
-            if (isAttacking)
-                finnDrawer.DrawAni(facingRight, position, animationAttackRight, animationAttackLeft);
-
-            if (isIdle && !isAttacking)
+            if (isDead || goalReached)
             {
-                finnDrawer.DrawAni(facingRight, position, animationIdleRight, animationIdleLeft);
+                finnDrawer.DrawAni(facingRight, position, animationDieRight, animationDieLeft);
             }
 
-            if (!isIdle)
+            if (!isDead)
             {
-                if (!isJumping && isGrounded && !isAttacking)
+
+                if (isAttacking)
+                    finnDrawer.DrawAni(facingRight, position, animationAttackRight, animationAttackLeft);
+
+                if (isIdle && !isAttacking)
                 {
-                    finnDrawer.DrawAni(facingRight, position, animationWalkingRight, animationWalkingLeft);
+                    finnDrawer.DrawAni(facingRight, position, animationIdleRight, animationIdleLeft);
                 }
 
-                if (isJumping && !isGrounded && !isAttacking)
+                if (!isIdle)
                 {
-                    finnDrawer.DrawAni(facingRight, position, animationJumpRight, animationJumpLeft);
+                    if (!isJumping && isGrounded && !isAttacking)
+                    {
+                        finnDrawer.DrawAni(facingRight, position, animationWalkingRight, animationWalkingLeft);
+                    }
+
+                    if (isJumping && !isGrounded && !isAttacking)
+                    {
+                        finnDrawer.DrawAni(facingRight, position, animationJumpRight, animationJumpLeft);
+                    }
                 }
             }
         }
