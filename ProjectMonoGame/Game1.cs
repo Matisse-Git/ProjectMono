@@ -11,9 +11,15 @@ namespace ProjectMonoGame
         SpriteBatch spriteBatch;
 
         Backdrop backdropOne;
-        Level levelOne;
+        Backdrop moveTutorialBackdrop;
+        Backdrop JumpTutorialBackdrop;
+        LevelList allLevels;
+
+        Texture2D JumpTutorialTexture;
+        Texture2D moveTutorialTexture;
 
         Player finn;
+        List<MushroomEnemy> enemies;
 
         public Game1()
         {
@@ -39,46 +45,23 @@ namespace ProjectMonoGame
             Texture2D mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
 
             Texture2D platformSpriteSheet = Content.Load<Texture2D>("TileSet");
+            Texture2D spikeTile = Content.Load<Texture2D>("SpikeTile");
+            Texture2D portalTileOne = Content.Load<Texture2D>("PortalEndGoalOne");
+            Texture2D portalTileTwo = Content.Load<Texture2D>("PortalEndGoalTwo");
+            Texture2D portalTileThree = Content.Load<Texture2D>("PortalEndGoalThree");
+            Texture2D portalTileFour = Content.Load<Texture2D>("PortalEndGoalFour");
 
+
+            moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
+            JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
 
 
             //Making Objects
-            byte[,] byteArrLevelOne = new byte[,]
-            {
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,8,1,1,9,0,0,0,0,0,0,8,1,1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,8,1,1,1,1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,2,2,4,0,0,10,11,11,12,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,5,2,2,4,0,0,0,0,0,0,5,2,2,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {6,1,1,1,1,7,2,2,6,1,1,1,1,1,1,7,2,2,2,2,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,7  },
-               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2  },
-               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2  },
-               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2  }
-            };
-
-            levelOne = new Level(platformSpriteSheet, byteArrLevelOne);
-            levelOne.CreateLevel();
-
-            finn = new Player(new Vector2(32, 0), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
-            backdropOne = new Backdrop(backdropOneTexture);
+            allLevels = new LevelList(platformSpriteSheet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour);
+            backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            finn = new Player(new Vector2(32, 0), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
         }
 
         protected override void UnloadContent()
@@ -90,25 +73,29 @@ namespace ProjectMonoGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            foreach (ITile tile in levelOne.tileArr)
+            if (finn.goalReached)
             {
-                if (tile is ICollidable)
+                allLevels.currentLevelInt++;
+                finn.goalReached = false;
+            }
+
+            if (allLevels.currentLevelInt == 0)
+            {
+                if (finn.position.X >= 800)
                 {
-                    if (tile != null)
-                    {
-                        if (finn.CheckCollision(tile.collisionRectangle))
-                        {
-                            break;
-                        }
-                    }
+                    moveTutorialBackdrop = null;
+                    JumpTutorialBackdrop = new Backdrop(JumpTutorialTexture, 4000, 4000, 1, 1500, new Vector2(-2700, -1500));
+                }
+                if (finn.position.X < 800)
+                {
+                    JumpTutorialBackdrop = null;
+                    moveTutorialBackdrop = new Backdrop(moveTutorialTexture, 4000, 4000, 1, 3000, new Vector2(-200, -800));
                 }
             }
-            int counter = 0;
-            finn.Update(gametime);
-            
-            //mushy.Update(gametime);
 
-            System.Console.WriteLine(finn.rightCollisionRectangle);
+
+            allLevels.Update();
+            finn.Update(gametime, allLevels.currentLevel.tileArr);
 
             base.Update(gametime);
         }
@@ -117,14 +104,19 @@ namespace ProjectMonoGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //var viewMatrix = camera.GetViewMatrix();
-            //camera.position = finn.position;
-
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+
             backdropOne.Draw(spriteBatch);
-            levelOne.DrawLevel(spriteBatch);
-            //mushy.Draw(spriteBatch);
+            if (allLevels.currentLevelInt == 0)
+            {
+                if (moveTutorialBackdrop != null)
+                    moveTutorialBackdrop.Draw(spriteBatch);
+                if (JumpTutorialBackdrop != null)
+                    JumpTutorialBackdrop.Draw(spriteBatch);
+            }
+            allLevels.currentLevel.DrawLevel(spriteBatch);
             finn.Draw(spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);

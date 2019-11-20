@@ -8,16 +8,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame
 {
-    class Level
+    public class Level
     {
         public Texture2D tileSet;
+        public Texture2D spikeTile;
+        public Texture2D portalTileOne;
+        public Texture2D portalTileTwo;
+        public Texture2D portalTileThree;
+        public Texture2D portalTileFour;
         byte[,] byteArr = new byte[25,40];
         public ITile[,] tileArr = new ITile[25,40];
 
-        public Level(Texture2D tileSetIn, byte[,] byteArrIn)
+        public Level(Texture2D tileSetIn, Texture2D SpikeTileIn, Texture2D portalTileOneIn, Texture2D portalTileTwoIn, Texture2D portalTileThreeIn, Texture2D portalTileFourIn, byte[,] byteArrIn)
         {
             tileSet = tileSetIn;
             byteArr = byteArrIn;
+            spikeTile = SpikeTileIn;
+            portalTileOne = portalTileOneIn;
+            portalTileTwo = portalTileTwoIn;
+            portalTileThree = portalTileThreeIn;
+            portalTileFour = portalTileFourIn;
         }
 
         public void CreateLevel()
@@ -73,6 +83,34 @@ namespace ProjectMonoGame
                     if (byteArr[i, j] == 12)
                     {
                         tileArr[i, j] = new longFloatingRightTile(new Vector2(j * 16 * 3, (i * (16 * 3))), tileSet);
+                    }
+                    if (byteArr[i, j] == 13)
+                    {
+                        tileArr[i, j] = new spikeTile(new Vector2(j * 16 * 3, (i * (16 * 3))), spikeTile);
+                    }
+                    if (byteArr[i,j] == 14)
+                    {
+                        tileArr[i, j] = new portalTileOne(new Vector2(j * 16 * 3, (i * (16 * 3))), portalTileOne);
+                    }
+                    if (byteArr[i, j] == 15)
+                    {
+                        tileArr[i, j] = new portalTileTwo(new Vector2(j * 16 * 3, (i * (16 * 3))), portalTileTwo);
+                    }
+                    if (byteArr[i, j] == 16)
+                    {
+                        tileArr[i, j] = new portalTileThree(new Vector2(j * 16 * 3, (i * (16 * 3))), portalTileThree);
+                    }
+                    if (byteArr[i, j] == 17)
+                    {
+                        tileArr[i, j] = new portalTileFour(new Vector2(j * 16 * 3, (i * (16 * 3))), portalTileFour);
+                    }
+                    if (byteArr[i, j] == 18)
+                    {
+                        tileArr[i, j] = new roofToLeftWall(new Vector2(j * 16 * 3, (i * (16 * 3))), tileSet);
+                    }
+                    if (byteArr[i, j] == 19)
+                    {
+                        tileArr[i, j] = new roofToRightWall(new Vector2(j * 16 * 3, (i * (16 * 3))), tileSet);
                     }
                 }
             }
