@@ -246,6 +246,7 @@ namespace ProjectMonoGame
                         position.X = 50;
                         position.Y = 900;
                         isDead = false;
+                        facingRight = true;
                     }
                 }
                 if (!facingRight)
@@ -255,7 +256,9 @@ namespace ProjectMonoGame
                         position.X = 50;
                         position.Y = 900;
                         isDead = false;
+                        facingRight = true;
                     }
+
                 }
             }
         }
@@ -365,6 +368,7 @@ namespace ProjectMonoGame
             {
                 position.X = 50;
                 position.Y = 900;
+                facingRight = true;
             }
         }
 

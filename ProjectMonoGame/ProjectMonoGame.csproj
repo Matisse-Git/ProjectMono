@@ -55,6 +55,7 @@
     <Compile Include="LivingObjects\MushroomEnemy.cs" />
     <Compile Include="LivingObjects\Player.cs" />
     <Compile Include="BackgroundClasses\Program.cs" />
+    <Compile Include="ParticleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\Tile.cs" />
   </ItemGroup>
