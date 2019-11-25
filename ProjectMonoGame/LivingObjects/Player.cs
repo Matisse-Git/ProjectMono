@@ -56,10 +56,13 @@ namespace ProjectMonoGame
         private bool isFalling;
         private bool holdingRight;
         private bool holdingSpace;
+        private bool isHurt;
         public bool goalReached;
 
-        bool canWallJump = true;
-        int count = 0;
+        private bool canWallJump = true;
+        private int count = 0;
+        private int HP = 2;
+
 
         public float gravity { get; set; } = 4;
         private float walkingSpeed = 0;
@@ -111,13 +114,13 @@ namespace ProjectMonoGame
             aniCreator.CreateAniRight(animationJumpDust, 0, 4);
         }
 
-        public void Update(GameTime gametime, ITile[,] tilesIn)
+        public void Update(GameTime gametime, ITile[,] tilesIn, List<Enemy> enemyListIn)
         {
             downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
             rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
             leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
 
-            CheckCollision(tilesIn);
+            CheckCollision(tilesIn, enemyListIn);
 
             if (!isDead)
             {
@@ -298,7 +301,7 @@ namespace ProjectMonoGame
                 }
             }
         }
-        private void CheckCollision(ITile[,] tilesIn)
+        private void CheckCollision(ITile[,] tilesIn, List<Enemy> enemyListIn)
         {
             foreach (ITile tile in tilesIn)
             {
@@ -356,6 +359,54 @@ namespace ProjectMonoGame
                         {
                             isGrounded = false;
                             isJumping = true;
+                        }
+                    }
+                }
+
+                foreach (Enemy enemy in enemyListIn)
+                {
+                    if (colliManager.CheckCollider(downCollisionRectangle, enemy.collisionRectangle) || colliManager.CheckCollider(leftCollisionRectangle,
+                       enemy.collisionRectangle) || colliManager.CheckCollider(rightCollisionRectangle, enemy.collisionRectangle))
+                    {
+                        isHurt = true;
+                    }
+                }
+            }
+        }
+
+        public void TakeDamage(GameTime gametime)
+        {
+            if (isHurt)
+            {
+                if (facingRight)
+                {
+                    if (animationHitRight.UpdateFull(gametime))
+                    {
+                        if (HP > 0)
+                        {
+                            HP--;
+                            isHurt = false;
+                        }
+                        else
+                        {
+                            isDead = true;
+                            isHurt = false;
+                        }
+                    }
+                }
+                if (!facingRight)
+                {
+                    if (animationHitLeft.UpdateFull(gametime))
+                    {
+                        if (HP > 0)
+                        {
+                            HP--;
+                            isHurt = false;
+                        }
+                        else
+                        {
+                            isDead = true;
+                            isHurt = false;
                         }
                     }
                 }

@@ -42,6 +42,12 @@ namespace ProjectMonoGame
             if (Keyboard.GetState().IsKeyDown(Keys.X))
                 return "Attack";
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                return "Down";
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                return "Up";
+
             else
                 return "Null";
         }

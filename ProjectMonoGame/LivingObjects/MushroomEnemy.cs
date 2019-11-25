@@ -48,8 +48,6 @@ namespace ProjectMonoGame
     }
     class MushroomEnemy : Enemy
     {
-        public Rectangle collisionRectangle { get; set; }
-
         private Texture2D spritesheetLeft, spritesheetRight;
 
         public Vector2 position;
@@ -72,10 +70,6 @@ namespace ProjectMonoGame
         private int spriteScale = 4;
 
         private bool facingRight = false;
-        private bool isIdle = true;
-        private bool isJumping;
-        private bool isAttacking;
-        private bool isDead = false;
 
         public MushroomEnemy(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight)
         {
