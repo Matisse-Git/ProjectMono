@@ -44,6 +44,7 @@ namespace ProjectMonoGame
             //Textures
             Texture2D finnSpritesheetLeft = Content.Load<Texture2D>("FinnSpriteLeft");
             Texture2D finnSpritesheetRight = Content.Load<Texture2D>("FinnSpriteRight");
+            Texture2D jumpParticleDust = Content.Load<Texture2D>("DoubleJumpDust");
 
             mushroomSpritesheetLeft = Content.Load<Texture2D>("MushroomLeft");
             mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
@@ -66,7 +67,7 @@ namespace ProjectMonoGame
             enemyList = new List<Enemy>();
             backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            finn = new Player(new Vector2(32, 0), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
+            finn = new Player(new Vector2(32, 0), finnSpritesheetLeft, finnSpritesheetRight, jumpParticleDust, new KeyboardHandler());
         }
 
         protected override void UnloadContent()

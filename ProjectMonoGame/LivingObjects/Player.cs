@@ -18,7 +18,7 @@ namespace ProjectMonoGame
         public Rectangle rightCollisionRectangle { get; set; }
 
 
-        private Texture2D spritesheetLeft, spritesheetRight;
+        private Texture2D spritesheetLeft, spritesheetRight, jumpParticleDust;
 
         public Vector2 position;
 
@@ -27,11 +27,12 @@ namespace ProjectMonoGame
                           animationJumpLeft, animationIdleRight,
                           animationWalkingRight, animationAttackRight,
                           animationHitRight, animationJumpRight,
-                          animationDieRight, animationDieLeft;
+                          animationDieRight, animationDieLeft, animationJumpDust;
 
         private AnimationCreator aniCreator;
 
         private BatchDrawer finnDrawer;
+        private ParticleDrawer partiDrawer;
 
         private IController inputHandler;
 
@@ -68,12 +69,13 @@ namespace ProjectMonoGame
 
 
 
-        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, IController inputHandlerIn)
+        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D jumpParticleDustIn, IController inputHandlerIn)
         {
             inputHandler = inputHandlerIn;
             position = positionIn;
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
+            jumpParticleDust = jumpParticleDustIn;
 
             aniCreator = new AnimationCreator();
 
@@ -91,6 +93,8 @@ namespace ProjectMonoGame
             animationHitRight = new Animation(50);
             animationDieRight = new Animation(200);
             animationJumpRight = new Animation(100);
+            animationJumpDust = new Animation(20);
+            
 
             aniCreator.CreateAniLeft(animationIdleLeft, 1, 9);
             aniCreator.CreateAniRight(animationIdleRight, 0, 8);
@@ -104,6 +108,7 @@ namespace ProjectMonoGame
             aniCreator.CreateAniRight(animationHitRight, 16, 17);
             aniCreator.CreateAniLeft(animationDieLeft, 19, 23);
             aniCreator.CreateAniRight(animationDieRight, 18, 22);
+            aniCreator.CreateAniRight(animationJumpDust, 0, 4);
         }
 
         public void Update(GameTime gametime, ITile[,] tilesIn)
@@ -174,7 +179,6 @@ namespace ProjectMonoGame
             }
 
         }
-
         private void DoAttack(GameTime gametime)
         {
             if (isAttacking)
@@ -191,7 +195,6 @@ namespace ProjectMonoGame
                 }
             }
         }
-
         private void Walk(GameTime gametime)
         {
             if (facingRight)
@@ -213,7 +216,6 @@ namespace ProjectMonoGame
             }
             walkingSpeedAssign = 8;
         }
-
         private void Jump(GameTime gametime)
         {
             if (jumpHeight > 0)
@@ -227,7 +229,6 @@ namespace ProjectMonoGame
             if (!facingRight)
                 animationJumpLeft.Update(gametime);
         }
-
         private void DoNothing(GameTime gametime)
         {
             if (facingRight)
@@ -297,7 +298,6 @@ namespace ProjectMonoGame
                 }
             }
         }
-
         private void CheckCollision(ITile[,] tilesIn)
         {
             foreach (ITile tile in tilesIn)
@@ -361,7 +361,6 @@ namespace ProjectMonoGame
                 }
             }
         }
-
         public void FinishPose(GameTime gametime)
         {
             if (goalReached)
@@ -371,7 +370,6 @@ namespace ProjectMonoGame
                 facingRight = true;
             }
         }
-
         private void Reset()
         {
             rightColliding = false;
@@ -398,6 +396,17 @@ namespace ProjectMonoGame
                 {
                     finnDrawer.DrawAni(facingRight, position, animationIdleRight, animationIdleLeft);
                 }
+
+                //if (isIdle)
+                //{
+                //    if (isJumping && !isGrounded && !isAttacking)
+                //    {
+                //        if (partiDrawer != null)
+                //        {
+                //            partiDrawer.DrawParticle(spriteBatch, animationJumpDust);
+                //        }
+                //    }
+                //}
 
                 if (!isIdle)
                 {
