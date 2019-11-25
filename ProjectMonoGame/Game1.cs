@@ -17,9 +17,13 @@ namespace ProjectMonoGame
 
         Texture2D JumpTutorialTexture;
         Texture2D moveTutorialTexture;
+        Texture2D mushroomSpritesheetRight;
+        Texture2D mushroomSpritesheetLeft;
 
         Player finn;
-        List<MushroomEnemy> enemies;
+        List<Enemy> enemyList;
+
+        bool enemyMade = false;
 
         public Game1()
         {
@@ -41,8 +45,8 @@ namespace ProjectMonoGame
             Texture2D finnSpritesheetLeft = Content.Load<Texture2D>("FinnSpriteLeft");
             Texture2D finnSpritesheetRight = Content.Load<Texture2D>("FinnSpriteRight");
 
-            Texture2D mushroomSpritesheetLeft = Content.Load<Texture2D>("MushroomLeft");
-            Texture2D mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
+            mushroomSpritesheetLeft = Content.Load<Texture2D>("MushroomLeft");
+            mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
 
             Texture2D platformSpriteSheet = Content.Load<Texture2D>("TileSet");
             Texture2D spikeTile = Content.Load<Texture2D>("SpikeTile");
@@ -59,6 +63,7 @@ namespace ProjectMonoGame
 
             //Making Objects
             allLevels = new LevelList(platformSpriteSheet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour);
+            enemyList = new List<Enemy>();
             backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
             spriteBatch = new SpriteBatch(GraphicsDevice);
             finn = new Player(new Vector2(32, 0), finnSpritesheetLeft, finnSpritesheetRight, new KeyboardHandler());
@@ -93,9 +98,24 @@ namespace ProjectMonoGame
                 }
             }
 
+            if (allLevels.currentLevelInt == 3)
+            {
+                if (!enemyMade)
+                {
+                    enemyList.Add(new MushroomEnemy(new Vector2(1500, 890), mushroomSpritesheetLeft, mushroomSpritesheetRight));
+                    enemyMade = true;
+                }
+            }
 
             allLevels.Update();
             finn.Update(gametime, allLevels.currentLevel.tileArr);
+            foreach (Enemy enemy in enemyList)
+            {
+                if (enemy != null)
+                {
+                    enemy.Update(gametime);
+                }
+            }
 
             base.Update(gametime);
         }
@@ -115,6 +135,13 @@ namespace ProjectMonoGame
                     JumpTutorialBackdrop.Draw(spriteBatch);
             }
             allLevels.currentLevel.DrawLevel(spriteBatch);
+            foreach (Enemy enemy in enemyList)
+            {
+                if (enemy != null)
+                {
+                    enemy.Draw(spriteBatch);
+                }
+            }
             finn.Draw(spriteBatch);
 
             spriteBatch.End();
