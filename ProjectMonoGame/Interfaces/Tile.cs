@@ -12,7 +12,7 @@ namespace ProjectMonoGame
     {
         Rectangle collisionRectangle { get; set; }
         Vector2 position { get; set; }
-        int tileScale {get;set;}
+        int tileScale { get; set; }
         int tileWidth { get; set; }
         void Draw(SpriteBatch spriteBatch);
     }
@@ -36,14 +36,14 @@ namespace ProjectMonoGame
             collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
             tile = new Animation(999);
             tile.AddFrame(new Rectangle((tileWidth * 1), (tileWidth * 0), tileWidth, tileWidth));
-            
+
             position = positionIn;
             tileSet = tileSetIn;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            tileDrawer = new TileDrawer(spriteBatch,tileSet, tileScale, tileWidth);
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
 
             tileDrawer.DrawTile(position, tile);
         }
@@ -485,7 +485,7 @@ namespace ProjectMonoGame
         {
             collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
             tile = new Animation(999);
-            tile.AddFrame(new Rectangle(0,0,212,212));
+            tile.AddFrame(new Rectangle(0, 0, 212, 212));
 
             position = positionIn;
             tileSet = tileSetIn;
@@ -625,4 +625,35 @@ namespace ProjectMonoGame
         }
     }
 
+    public class roofTile : ITile, ICollidable
+    {
+        public Rectangle collisionRectangle { get; set; }
+        public Vector2 position { get; set; }
+        public int tileScale { get; set; } = 3;
+        public int tileWidth { get; set; } = 16;
+
+        private int offset = 10;
+        private int tileSetWidth = 240;
+        private int tileSetHeight = 48;
+        private Texture2D tileSet;
+        private Animation tile;
+        private TileDrawer tileDrawer;
+
+        public roofTile(Vector2 positionIn, Texture2D tileSetIn)
+        {
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            tile = new Animation(999);
+            tile.AddFrame(new Rectangle((tileWidth * 1), (tileWidth * 2), tileWidth, tileWidth));
+
+            position = positionIn;
+            tileSet = tileSetIn;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
+
+            tileDrawer.DrawTile(position, tile);
+        }
+    }
 }

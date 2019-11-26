@@ -58,6 +58,7 @@
     <Compile Include="ParticleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\Tile.cs" />
+    <Compile Include="Startscreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
