@@ -14,13 +14,15 @@ namespace ProjectMonoGame
         Texture2D startSC;
         Texture2D optionsSC;
 
-
         IController inputHandler;
 
         Vector2 screenPosition;
 
         private int menuItems;
         private int position = 0;
+
+        private float currentTime;
+        private float lastTime = 0;
 
         public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, IController inputHandlerIn, int menuItemsIn, Vector2 screenPositionIn)
         {
@@ -31,24 +33,43 @@ namespace ProjectMonoGame
             screenPosition = screenPositionIn;
         }
 
-        public void Update()
+        public void ChangePos(GameTime gametime)
         {
-            if (inputHandler.GetButtonPressed() == "Up")
+            currentTime += (float)gametime.ElapsedGameTime.TotalSeconds;
+            if ((currentTime - lastTime) > 0.1f)
             {
-                if (position < 0)
-                    position--;
+                if (inputHandler.GetButtonPressed() == "Up")
+                {
+                    if (position > 0)
+                        position--;
 
-                if (position == 0)
-                    position = menuItems;
+                    else if (position == 0)
+                        position = menuItems;
+                }
+                if (inputHandler.GetButtonPressed() == "Down")
+                {
+                    if (position < menuItems)
+                        position++;
+
+                    else if (position == menuItems)
+                        position = 0;
+                }
+                lastTime = currentTime;
             }
-            if (inputHandler.GetButtonPressed() == "Down")
+        }
+        public int ConfirmChoice()
+        {
+            if (inputHandler.GetButtonPressed() == "Confirm")
             {
-                if (position > menuItems)
-                    position++;
-
-                if (position == menuItems)
-                    position = 0;
+                return position;
             }
+            return -1;
+        }
+
+        public int Update(GameTime gametime)
+        {
+            ChangePos(gametime);
+            return ConfirmChoice();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -64,6 +85,38 @@ namespace ProjectMonoGame
                 default:
                     break;
             }
+        }
+    }
+
+    class LoadingScreen
+    {
+        private float currentTime;
+        private float lastTime = 0;
+
+        Vector2 screenPosition;
+
+        private Texture2D loadingTexture;
+
+        public LoadingScreen(Texture2D loadingTextureIn, Vector2 screenPositionIn)
+        {
+            loadingTexture = loadingTextureIn;
+            screenPosition = screenPositionIn;
+        }
+
+        public bool Load(GameTime gametime, float loadingTimeIn)
+        {
+            currentTime += (float)gametime.ElapsedGameTime.TotalSeconds;
+            if ((currentTime - lastTime) > loadingTimeIn)
+            {
+                currentTime = 0;
+                return true;
+            }
+            return false;
+        }
+        
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(loadingTexture, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 2000, 1200), new Rectangle(0, 0, 2000 ,1244), Color.White);
         }
     }
 }

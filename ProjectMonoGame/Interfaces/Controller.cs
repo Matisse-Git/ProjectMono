@@ -48,6 +48,9 @@ namespace ProjectMonoGame
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 return "Up";
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                return "Confirm";
+
             else
                 return "Null";
         }
