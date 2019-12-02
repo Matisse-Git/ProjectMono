@@ -71,6 +71,7 @@ namespace ProjectMonoGame
             Texture2D portalTileFour = Content.Load<Texture2D>("PortalEndGoalFour");
             Texture2D startSC = Content.Load<Texture2D>("StartSC");
             Texture2D optionsSC = Content.Load<Texture2D>("OptionSC");
+            Texture2D exitSC = Content.Load<Texture2D>("ExitSC");
             Texture2D loadingScreenTexture = Content.Load<Texture2D>("LoadingScreen");
 
             moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
@@ -84,9 +85,8 @@ namespace ProjectMonoGame
             enemyList = new List<Enemy>();
             backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            startScreen = new Startscreen(startSC, optionsSC, new KeyboardHandler(), 1, new Vector2(600, 200));
-            loadingScreen = new LoadingScreen(loadingScreenTexture, new Vector2(0, 0));
-            finn = new Player(new Vector2(32, 880), finnSpritesheetLeft, finnSpritesheetRight, jumpParticleDust, new KeyboardHandler());
+            startScreen = new Startscreen(startSC, optionsSC, new KeyboardHandler(), 1, new Vector2(600,200));
+            finn = new Player(new Vector2(32, 0), finnSpritesheetLeft, finnSpritesheetRight, jumpParticleDust, new KeyboardHandler());
         }
 
         protected override void UnloadContent()

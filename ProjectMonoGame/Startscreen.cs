@@ -13,6 +13,7 @@ namespace ProjectMonoGame
 
         Texture2D startSC;
         Texture2D optionsSC;
+        Texture2D exitSC;
 
         IController inputHandler;
 
@@ -21,13 +22,14 @@ namespace ProjectMonoGame
         private int menuItems;
         private int position = 0;
 
+        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn, Vector2 screenPositionIn)
         private float currentTime;
         private float lastTime = 0;
 
-        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, IController inputHandlerIn, int menuItemsIn, Vector2 screenPositionIn)
         {
             startSC = startSCIn;
             optionsSC = optionsSCIn;
+            exitSC = exitSCIn;
             inputHandler = inputHandlerIn;
             menuItems = menuItemsIn;
             screenPosition = screenPositionIn;
@@ -81,6 +83,9 @@ namespace ProjectMonoGame
                     break;
                 case 1:
                     spriteBatch.Draw(optionsSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 800, 800), new Rectangle(0, 0, 800, 800), Color.White);
+                    break;
+                case 2:
+                    spriteBatch.Draw(exitSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 800, 800), new Rectangle(0, 0, 800, 800), Color.White);
                     break;
                 default:
                     break;
