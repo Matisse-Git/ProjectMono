@@ -114,7 +114,7 @@ namespace ProjectMonoGame
             aniCreator.CreateAniRight(animationJumpDust, 0, 4);
         }
 
-        public void Update(GameTime gametime, ITile[,] tilesIn, List<Enemy> enemyListIn)
+        public void Update(GameTime gametime, Tile[,] tilesIn, List<Enemy> enemyListIn)
         {
             downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
             rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
@@ -301,75 +301,73 @@ namespace ProjectMonoGame
                 }
             }
         }
-        private void CheckCollision(ITile[,] tilesIn, List<Enemy> enemyListIn)
+        private void CheckCollision(Tile[,] tilesIn, List<Enemy> enemyListIn)
         {
-            foreach (ITile tile in tilesIn)
+            foreach (Tile tile in tilesIn)
             {
-                if (tile is ICollidable)
+                if (tile != null)
                 {
-                    if (tile != null)
+                    if (colliManager.CheckCollider(rightCollisionRectangle, tile.collisionRectangle))
                     {
-                        if (colliManager.CheckCollider(rightCollisionRectangle, tile.collisionRectangle))
-                        {
-                            rightColliding = true;
-                            jumpHeight = 2;
-                            if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
-                            {
-                                goalReached = true;
-                            }
-                        }
+                        rightColliding = true;
+                        jumpHeight = 2;
+                        //if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
+                        //{
+                        //    goalReached = true;
+                        //}
+                    }
 
-                        if (colliManager.CheckCollider(leftCollisionRectangle, tile.collisionRectangle))
-                        {
-                            leftColliding = true;
-                            jumpHeight = 2;
-                            if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
-                            {
-                                goalReached = true;
-                            }
-                        }
+                    if (colliManager.CheckCollider(leftCollisionRectangle, tile.collisionRectangle))
+                    {
+                        leftColliding = true;
+                        jumpHeight = 2;
+                        //if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
+                        //{
+                        //    goalReached = true;
+                        //}
+                    }
 
-                        if (gravity >= 12)
-                        {
-                            isFalling = true;
-                        }
+                    if (gravity >= 12)
+                    {
+                        isFalling = true;
+                    }
 
-                        if (colliManager.CheckCollider(downCollisionRectangle, tile.collisionRectangle))
+                    if (colliManager.CheckCollider(downCollisionRectangle, tile.collisionRectangle))
+                    {
+                        if (tile.Identity == TileIdentifier.Spike)
                         {
-                            if (tile is spikeTile)
-                            {
-                                isDead = true;
-                            }
-                            if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour) 
-                            {
-                                goalReached = true;
-                            }
-                            else
-                            {
-
-                                isGrounded = true;
-                                isJumping = false;
-                                jumpHeight = 15;
-                                gravity = 0;
-                                isFalling = false;
-                                break;
-                            }
+                            isDead = true;
                         }
+                        //if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
+                        //{
+                        //    goalReached = true;
+                        //}
                         else
                         {
-                            isGrounded = false;
-                            isJumping = true;
+
+                            isGrounded = true;
+                            isJumping = false;
+                            jumpHeight = 15;
+                            gravity = 0;
+                            isFalling = false;
+                            break;
                         }
                     }
-                }
-
-                foreach (Enemy enemy in enemyListIn)
-                {
-                    if (colliManager.CheckCollider(downCollisionRectangle, enemy.collisionRectangle) || colliManager.CheckCollider(leftCollisionRectangle,
-                       enemy.collisionRectangle) || colliManager.CheckCollider(rightCollisionRectangle, enemy.collisionRectangle))
+                    else
                     {
-                        isHurt = true;
+                        isGrounded = false;
+                        isJumping = true;
                     }
+                }
+            }
+        
+
+            foreach (Enemy enemy in enemyListIn)
+            {
+                if (colliManager.CheckCollider(downCollisionRectangle, enemy.collisionRectangle) || colliManager.CheckCollider(leftCollisionRectangle,
+                   enemy.collisionRectangle) || colliManager.CheckCollider(rightCollisionRectangle, enemy.collisionRectangle))
+                {
+                    isHurt = true;
                 }
             }
         }

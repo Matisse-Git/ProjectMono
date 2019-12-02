@@ -13,6 +13,7 @@ namespace ProjectMonoGame
 
         Texture2D startSC;
         Texture2D optionsSC;
+        Texture2D exitSC;
 
         IController inputHandler;
 
@@ -23,11 +24,11 @@ namespace ProjectMonoGame
 
         private float currentTime;
         private float lastTime = 0;
-
-        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, IController inputHandlerIn, int menuItemsIn, Vector2 screenPositionIn)
+        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn, Vector2 screenPositionIn)
         {
             startSC = startSCIn;
             optionsSC = optionsSCIn;
+            exitSC = exitSCIn;
             inputHandler = inputHandlerIn;
             menuItems = menuItemsIn;
             screenPosition = screenPositionIn;
@@ -77,10 +78,13 @@ namespace ProjectMonoGame
             switch (position)
             {
                 case 0:
-                    spriteBatch.Draw(startSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 800, 800), new Rectangle(0, 0, 800, 800), Color.White);
+                    spriteBatch.Draw(startSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 400, 400), new Rectangle(0, 0, 800, 800), Color.White);
                     break;
                 case 1:
-                    spriteBatch.Draw(optionsSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 800, 800), new Rectangle(0, 0, 800, 800), Color.White);
+                    spriteBatch.Draw(optionsSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 400, 400), new Rectangle(0, 0, 800, 800), Color.White);
+                    break;
+                case 2:
+                    spriteBatch.Draw(exitSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 400, 400), new Rectangle(0, 0, 800, 800), Color.White);
                     break;
                 default:
                     break;
@@ -116,7 +120,32 @@ namespace ProjectMonoGame
         
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(loadingTexture, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 2000, 1200), new Rectangle(0, 0, 2000 ,1244), Color.White);
+            spriteBatch.Draw(loadingTexture, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 1920, 1080), new Rectangle(0, 0, 2000 ,1244), Color.White);
         }
     }
+
+    class Title
+    {
+        Texture2D titleTexture;
+
+        Vector2 screenPos;
+        Vector2 targetSize;
+        Vector2 sourceSize;
+
+        public Title(Texture2D titleTextureIn, Vector2 screenPosIn, Vector2 targetSizeIn, Vector2 sourceSizeIn)
+        {
+            titleTexture = titleTextureIn;
+            screenPos = screenPosIn;
+
+            targetSize = targetSizeIn;
+            sourceSize = sourceSizeIn;
+        
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(titleTexture, new Rectangle((int)screenPos.X, (int)screenPos.Y, (int)targetSize.X, (int)targetSize.Y), new Rectangle(0, 0, (int)sourceSize.X, (int)sourceSize.Y), Color.White);
+        }
+    }
+
 }

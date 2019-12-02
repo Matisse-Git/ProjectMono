@@ -33,6 +33,8 @@ namespace ProjectMonoGame
 
         Startscreen startScreen;
         LoadingScreen loadingScreen;
+        Title title;
+        Title backdropTitle;
 
         Player finn;
         List<Enemy> enemyList;
@@ -71,7 +73,10 @@ namespace ProjectMonoGame
             Texture2D portalTileFour = Content.Load<Texture2D>("PortalEndGoalFour");
             Texture2D startSC = Content.Load<Texture2D>("StartSC");
             Texture2D optionsSC = Content.Load<Texture2D>("OptionSC");
+            Texture2D exitSC = Content.Load<Texture2D>("ExitSC");
             Texture2D loadingScreenTexture = Content.Load<Texture2D>("LoadingScreen");
+            Texture2D titleTexture = Content.Load<Texture2D>("TitleSC");
+            Texture2D backdropTitleTexture = Content.Load<Texture2D>("BackdropTitle");
 
             moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
             JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
@@ -84,9 +89,11 @@ namespace ProjectMonoGame
             enemyList = new List<Enemy>();
             backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            startScreen = new Startscreen(startSC, optionsSC, new KeyboardHandler(), 1, new Vector2(600, 200));
+            startScreen = new Startscreen(startSC, optionsSC,exitSC, new KeyboardHandler(), 2, new Vector2(750,650));
             loadingScreen = new LoadingScreen(loadingScreenTexture, new Vector2(0, 0));
-            finn = new Player(new Vector2(32, 880), finnSpritesheetLeft, finnSpritesheetRight, jumpParticleDust, new KeyboardHandler());
+            title = new Title(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
+            backdropTitle = new Title(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
+            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, jumpParticleDust, new KeyboardHandler());
         }
 
         protected override void UnloadContent()
@@ -106,6 +113,9 @@ namespace ProjectMonoGame
                             gameState = GameState.InGame;
                         break;
                     case 1: gameState = GameState.Options;
+                        break;
+                    case 2:
+                        Exit();
                         break;
                     default:
                         break;
@@ -167,14 +177,17 @@ namespace ProjectMonoGame
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.WhiteSmoke);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
 
             if (gameState == GameState.Startscreen)
             {
+                backdropTitle.Draw(spriteBatch);
+
                 startScreen.Draw(spriteBatch);
+                title.Draw(spriteBatch);
             }
 
             if (gameState == GameState.InGame)

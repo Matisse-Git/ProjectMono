@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace ProjectMonoGame
 {
-    class AnimationFrame
+    public class AnimationFrame
     {
         public Rectangle SourceRectangle { get; set; }
     }
