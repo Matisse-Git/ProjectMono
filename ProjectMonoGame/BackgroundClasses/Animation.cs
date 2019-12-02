@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace ProjectMonoGame
 {
-    class Animation
+    public class Animation
     {
         public  List<AnimationFrame> frames;
         public AnimationFrame currentFrame;
