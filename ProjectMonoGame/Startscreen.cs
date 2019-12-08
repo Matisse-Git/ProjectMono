@@ -10,28 +10,26 @@ namespace ProjectMonoGame
 {
     class Startscreen
     {
-
-        Texture2D startSC;
-        Texture2D optionsSC;
-        Texture2D exitSC;
+        ImageDrawer startSCI;
+        ImageDrawer optionsSCI;
+        ImageDrawer exitSCI;
 
         IController inputHandler;
-
-        Vector2 screenPosition;
 
         private int menuItems;
         private int position = 0;
 
         private float currentTime;
         private float lastTime = 0;
-        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn, Vector2 screenPositionIn)
+
+        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn)
         {
-            startSC = startSCIn;
-            optionsSC = optionsSCIn;
-            exitSC = exitSCIn;
+            startSCI = new ImageDrawer(startSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
+            optionsSCI = new ImageDrawer(optionsSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
+            exitSCI = new ImageDrawer(exitSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
+
             inputHandler = inputHandlerIn;
             menuItems = menuItemsIn;
-            screenPosition = screenPositionIn;
         }
 
         public void ChangePos(GameTime gametime)
@@ -78,13 +76,13 @@ namespace ProjectMonoGame
             switch (position)
             {
                 case 0:
-                    spriteBatch.Draw(startSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 400, 400), new Rectangle(0, 0, 800, 800), Color.White);
+                    startSCI.Draw(spriteBatch);
                     break;
                 case 1:
-                    spriteBatch.Draw(optionsSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 400, 400), new Rectangle(0, 0, 800, 800), Color.White);
+                    optionsSCI.Draw(spriteBatch);
                     break;
                 case 2:
-                    spriteBatch.Draw(exitSC, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 400, 400), new Rectangle(0, 0, 800, 800), Color.White);
+                    exitSCI.Draw(spriteBatch);
                     break;
                 default:
                     break;
@@ -92,49 +90,23 @@ namespace ProjectMonoGame
         }
     }
 
-    class LoadingScreen
+    class ImageDrawer
     {
-        private float currentTime;
-        private float lastTime = 0;
-
-        Vector2 screenPosition;
-
-        private Texture2D loadingTexture;
-
-        public LoadingScreen(Texture2D loadingTextureIn, Vector2 screenPositionIn)
-        {
-            loadingTexture = loadingTextureIn;
-            screenPosition = screenPositionIn;
-        }
-
-        public bool Load(GameTime gametime, float loadingTimeIn)
-        {
-            currentTime += (float)gametime.ElapsedGameTime.TotalSeconds;
-            if ((currentTime - lastTime) > loadingTimeIn)
-            {
-                currentTime = 0;
-                return true;
-            }
-            return false;
-        }
-        
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(loadingTexture, new Rectangle((int)screenPosition.X, (int)screenPosition.Y, 1920, 1080), new Rectangle(0, 0, 2000 ,1244), Color.White);
-        }
-    }
-
-    class Title
-    {
-        Texture2D titleTexture;
+        Texture2D[] images;
+        Texture2D currentImage;
+        int currentImageInt = 0;
+        int frameAmount = 1;
 
         Vector2 screenPos;
         Vector2 targetSize;
         Vector2 sourceSize;
 
-        public Title(Texture2D titleTextureIn, Vector2 screenPosIn, Vector2 targetSizeIn, Vector2 sourceSizeIn)
+        public ImageDrawer(Texture2D imageIn, Vector2 screenPosIn, Vector2 targetSizeIn, Vector2 sourceSizeIn)
         {
-            titleTexture = titleTextureIn;
+            images = new Texture2D[frameAmount];
+            images[0] = imageIn;
+            currentImage = images[0];
+
             screenPos = screenPosIn;
 
             targetSize = targetSizeIn;
@@ -142,10 +114,33 @@ namespace ProjectMonoGame
         
         }
 
+        //animated image
+        public ImageDrawer(Texture2D[] imagesIn, Vector2 screenPosIn, Vector2 targetSizeIn, Vector2 sourceSizeIn, int frameAmountIn)
+        {
+            frameAmount = frameAmountIn;
+            images = imagesIn;
+            currentImage = images[0];
+
+            screenPos = screenPosIn;
+
+            targetSize = targetSizeIn;
+            sourceSize = sourceSizeIn;
+        }
+
+        public void Update()
+        {
+            if ((currentImageInt + 1) > frameAmount)            
+                currentImageInt++;
+
+            else            
+                currentImageInt = 0;
+
+            currentImage = images[currentImageInt];
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(titleTexture, new Rectangle((int)screenPos.X, (int)screenPos.Y, (int)targetSize.X, (int)targetSize.Y), new Rectangle(0, 0, (int)sourceSize.X, (int)sourceSize.Y), Color.White);
+            spriteBatch.Draw(currentImage, new Rectangle((int)screenPos.X, (int)screenPos.Y, (int)targetSize.X, (int)targetSize.Y), new Rectangle(0, 0, (int)sourceSize.X, (int)sourceSize.Y), Color.White);
         }
     }
-
 }

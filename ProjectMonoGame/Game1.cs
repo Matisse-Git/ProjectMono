@@ -9,7 +9,6 @@ namespace ProjectMonoGame
     {
         Startscreen,
         Options,
-        LoadingScreen,
         InGame,
         Credits
     }
@@ -19,9 +18,6 @@ namespace ProjectMonoGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Backdrop backdropOne;
-        Backdrop moveTutorialBackdrop;
-        Backdrop JumpTutorialBackdrop;
         LevelList allLevels;
 
         Texture2D JumpTutorialTexture;
@@ -32,9 +28,11 @@ namespace ProjectMonoGame
         GameState gameState;
 
         Startscreen startScreen;
-        LoadingScreen loadingScreen;
-        Title title;
-        Title backdropTitle;
+        ImageDrawer title;
+        ImageDrawer backdropTitle;
+        ImageDrawer levelBackground;
+        ImageDrawer moveTutorial;
+        ImageDrawer jumpTutorial;
 
         Player finn;
         List<Enemy> enemyList;
@@ -77,6 +75,7 @@ namespace ProjectMonoGame
             Texture2D doorTutorialTexture = Content.Load<Texture2D>("DoorButtonTutorial");
 
             moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
+            Texture2D moveTutorialTextureTwo = Content.Load<Texture2D>("MoveTutorialTwo");
             JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
 
@@ -85,12 +84,15 @@ namespace ProjectMonoGame
             //Making Objects
             allLevels = new LevelList(platformSpriteSheet, spikeTile, goalTexture);
             enemyList = new List<Enemy>();
-            backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
+            levelBackground = new ImageDrawer(backdropOneTexture, new Vector2(0,0), new Vector2(1920,1080), new Vector2(1920,1080));
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            startScreen = new Startscreen(startSC, optionsSC,exitSC, new KeyboardHandler(), 2, new Vector2(750,650));
-            loadingScreen = new LoadingScreen(loadingScreenTexture, new Vector2(0, 0));
-            title = new Title(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
-            backdropTitle = new Title(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
+            startScreen = new Startscreen(startSC, optionsSC,exitSC, new KeyboardHandler(), 2);
+            title = new ImageDrawer(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
+            backdropTitle = new ImageDrawer(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
+
+            moveTutorial = new ImageDrawer(moveTutorialTexture, new Vector2(200, 600), new Vector2(405, 333), new Vector2(405, 333));
+            jumpTutorial = new ImageDrawer(JumpTutorialTexture, new Vector2(900, 400), new Vector2(400, 330), new Vector2(739, 696));
+
             finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture,jumpParticleDust, new KeyboardHandler());
         }
 
@@ -120,34 +122,17 @@ namespace ProjectMonoGame
                 }
             }
 
-            if (gameState == GameState.InGame || gameState == GameState.LoadingScreen)
+            if (gameState == GameState.InGame)
             {
-
 
                 if (finn.goalReached)
                 {
-                    gameState = GameState.LoadingScreen;
-                    if (loadingScreen.Load(gametime, 1))
-                    {
                         gameState = GameState.InGame;
                         allLevels.currentLevelInt++;
                         finn.goalReached = false;
-                    }
                 }
 
-                if (allLevels.currentLevelInt == 0)
-                {
-                    if (finn.position.X >= 800)
-                    {
-                        moveTutorialBackdrop = null;
-                        JumpTutorialBackdrop = new Backdrop(JumpTutorialTexture, 4000, 4000, 1, 1500, new Vector2(-2700, -1500));
-                    }
-                    if (finn.position.X < 800)
-                    {
-                        JumpTutorialBackdrop = null;
-                        moveTutorialBackdrop = new Backdrop(moveTutorialTexture, 4000, 4000, 1, 3000, new Vector2(-200, -800));
-                    }
-                }
+
 
                 if (allLevels.currentLevelInt == 3)
                 {
@@ -190,13 +175,19 @@ namespace ProjectMonoGame
 
             if (gameState == GameState.InGame)
             {
-                backdropOne.Draw(spriteBatch);
+                levelBackground.Draw(spriteBatch);
                 if (allLevels.currentLevelInt == 0)
                 {
-                    if (moveTutorialBackdrop != null)
-                        moveTutorialBackdrop.Draw(spriteBatch);
-                    if (JumpTutorialBackdrop != null)
-                        JumpTutorialBackdrop.Draw(spriteBatch);
+                    if (finn.position.X < 800)
+                    {
+                        if (moveTutorial != null)
+                            moveTutorial.Draw(spriteBatch);
+                    }
+                    else
+                    {
+                        if (jumpTutorial != null)
+                            jumpTutorial.Draw(spriteBatch);
+                    }
                 }
                 allLevels.currentLevel.DrawLevel(spriteBatch);
                 foreach (Enemy enemy in enemyList)
@@ -209,10 +200,6 @@ namespace ProjectMonoGame
                 finn.Draw(spriteBatch);
             }
 
-            if (gameState == GameState.LoadingScreen)
-            {
-                loadingScreen.Draw(spriteBatch);
-            }
 
             spriteBatch.End();
 

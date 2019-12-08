@@ -18,6 +18,9 @@ namespace ProjectMonoGame
         GroundToLeftWall,
         RightWallToGround,
         LeftWallToGround,
+        RightWallToRoof,
+        LeftWallToRoof,
+        Roof,
         Spike,
         Gate
     }
@@ -29,9 +32,6 @@ namespace ProjectMonoGame
 
         private int tileScale;
         private int tileWidth;
-        private int offset = 0;
-        private int tileSetWidth = 240;
-        private int tileSetHeight = 48;
         private Texture2D tileSet;
         protected Animation tile;
         private TileDrawer tileDrawer;
@@ -47,7 +47,7 @@ namespace ProjectMonoGame
             tileSet = tileSetIn;
             Identity = IdentityIn;
 
-            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale + offset, (tileWidth * tileScale), tileWidth * tileScale);
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale, (tileWidth * tileScale), tileWidth * tileScale);
             tile = new Animation(999);
             tile.AddFrame(new Rectangle((tileWidthIn * (int)tilePos.X), (tileWidthIn * (int)tilePos.Y), tileWidthIn, tileWidthIn));
 
