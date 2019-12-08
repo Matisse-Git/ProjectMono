@@ -10,23 +10,24 @@ namespace ProjectMonoGame
 {
     class Menu
     {
-        ImageDrawer startSCI;
-        ImageDrawer optionsSCI;
-        ImageDrawer exitSCI;
+        Texture2D[] optionTextures;
+        ImageDrawer[] options;
 
         IController inputHandler;
 
         private int menuItems;
-        private int position = 0;
+        public int position = 0;
 
         private float currentTime;
         private float lastTime = 0;
 
-        public Menu(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn)
+        public Menu(Texture2D[] optionTexturesIn, IController inputHandlerIn, int menuItemsIn)
         {
-            startSCI = new ImageDrawer(startSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
-            optionsSCI = new ImageDrawer(optionsSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
-            exitSCI = new ImageDrawer(exitSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
+            options = new ImageDrawer[menuItemsIn];
+            optionTextures = optionTexturesIn;
+
+            for (int i = 0; i < menuItemsIn; i++)
+                options[i] = new ImageDrawer(optionTextures[i], new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
 
             inputHandler = inputHandlerIn;
             menuItems = menuItemsIn;
@@ -43,14 +44,14 @@ namespace ProjectMonoGame
                         position--;
 
                     else if (position == 0)
-                        position = menuItems;
+                        position = menuItems- 1;
                 }
                 if (inputHandler.GetButtonPressed() == "Down")
                 {
-                    if (position < menuItems)
+                    if (position < menuItems-1)
                         position++;
 
-                    else if (position == menuItems)
+                    else if (position == menuItems - 1)
                         position = 0;
                 }
                 lastTime = currentTime;
@@ -73,20 +74,7 @@ namespace ProjectMonoGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            switch (position)
-            {
-                case 0:
-                    startSCI.Draw(spriteBatch);
-                    break;
-                case 1:
-                    optionsSCI.Draw(spriteBatch);
-                    break;
-                case 2:
-                    exitSCI.Draw(spriteBatch);
-                    break;
-                default:
-                    break;
-            }
+            options[position].Draw(spriteBatch);
         }
     }
 
