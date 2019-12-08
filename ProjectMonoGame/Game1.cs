@@ -33,6 +33,8 @@ namespace ProjectMonoGame
         ImageDrawer levelBackground;
         ImageDrawer moveTutorial;
         ImageDrawer jumpTutorial;
+        ImageDrawer spikeTutorial;
+        ImageDrawer wallJumpTutorial;
 
         Player finn;
         List<Enemy> enemyList;
@@ -75,8 +77,9 @@ namespace ProjectMonoGame
             Texture2D doorTutorialTexture = Content.Load<Texture2D>("DoorButtonTutorial");
 
             moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
-            Texture2D moveTutorialTextureTwo = Content.Load<Texture2D>("MoveTutorialTwo");
             JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
+            Texture2D spikeTutorialTexture = Content.Load<Texture2D>("SpikeTutorial");
+            Texture2D wallJumpTutorialTexture = Content.Load<Texture2D>("WallJumpTutorial");
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
 
             gameState = GameState.Startscreen;
@@ -92,6 +95,8 @@ namespace ProjectMonoGame
 
             moveTutorial = new ImageDrawer(moveTutorialTexture, new Vector2(200, 600), new Vector2(405, 333), new Vector2(405, 333));
             jumpTutorial = new ImageDrawer(JumpTutorialTexture, new Vector2(900, 400), new Vector2(400, 330), new Vector2(739, 696));
+            spikeTutorial = new ImageDrawer(spikeTutorialTexture, new Vector2(800, 300), new Vector2(400, 400), new Vector2(400, 400));
+            wallJumpTutorial = new ImageDrawer(wallJumpTutorialTexture, new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
             finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture,jumpParticleDust, new KeyboardHandler());
         }
@@ -189,6 +194,12 @@ namespace ProjectMonoGame
                             jumpTutorial.Draw(spriteBatch);
                     }
                 }
+                if (allLevels.currentLevelInt == 1)
+                    spikeTutorial.Draw(spriteBatch);
+
+                if (allLevels.currentLevelInt == 2)
+                    wallJumpTutorial.Draw(spriteBatch);
+
                 allLevels.currentLevel.DrawLevel(spriteBatch);
                 foreach (Enemy enemy in enemyList)
                 {
