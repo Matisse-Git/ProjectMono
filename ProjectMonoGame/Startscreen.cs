@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjectMonoGame
 {
-    class Startscreen
+    class Menu
     {
         ImageDrawer startSCI;
         ImageDrawer optionsSCI;
@@ -22,7 +22,7 @@ namespace ProjectMonoGame
         private float currentTime;
         private float lastTime = 0;
 
-        public Startscreen(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn)
+        public Menu(Texture2D startSCIn, Texture2D optionsSCIn, Texture2D exitSCIn, IController inputHandlerIn, int menuItemsIn)
         {
             startSCI = new ImageDrawer(startSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
             optionsSCI = new ImageDrawer(optionsSCIn, new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));

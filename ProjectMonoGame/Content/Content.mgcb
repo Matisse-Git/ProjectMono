@@ -277,6 +277,18 @@
 /processorParam:TextureFormat=Color
 /build:SpikeTile.png
 
+#begin SpikeTutorial.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpikeTutorial.png
+
 #begin StartSC.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -312,4 +324,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TitleSC.png
+
+#begin WallJumpTutorial.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:WallJumpTutorial.png
 
