@@ -27,7 +27,7 @@ namespace ProjectMonoGame
 
         GameState gameState;
 
-        Startscreen startScreen;
+        Menu startScreen;
         ImageDrawer title;
         ImageDrawer backdropTitle;
         ImageDrawer levelBackground;
@@ -89,7 +89,7 @@ namespace ProjectMonoGame
             enemyList = new List<Enemy>();
             levelBackground = new ImageDrawer(backdropOneTexture, new Vector2(0,0), new Vector2(1920,1080), new Vector2(1920,1080));
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            startScreen = new Startscreen(startSC, optionsSC,exitSC, new KeyboardHandler(), 2);
+            startScreen = new Menu(startSC, optionsSC,exitSC, new KeyboardHandler(), 2);
             title = new ImageDrawer(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
             backdropTitle = new ImageDrawer(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
 
@@ -139,14 +139,14 @@ namespace ProjectMonoGame
 
 
 
-                if (allLevels.currentLevelInt == 3)
-                {
-                    if (!enemyMade)
-                    {
-                        enemyList.Add(new MushroomEnemy(new Vector2(1500, 890), mushroomSpritesheetLeft, mushroomSpritesheetRight));
-                        enemyMade = true;
-                    }
-                }
+                //if (allLevels.currentLevelInt == 3)
+                //{
+                //    if (!enemyMade)
+                //    {
+                //        enemyList.Add(new MushroomEnemy(new Vector2(1500, 890), mushroomSpritesheetLeft, mushroomSpritesheetRight));
+                //        enemyMade = true;
+                //    }
+                //}
 
                 allLevels.Update();
                 finn.Update(gametime, allLevels.currentLevel.tileArr, enemyList);

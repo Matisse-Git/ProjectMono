@@ -44,7 +44,6 @@
     <Compile Include="BackgroundClasses\Animation.cs" />
     <Compile Include="BackgroundClasses\AnimationCreator.cs" />
     <Compile Include="BackgroundClasses\AnimationFrame.cs" />
-    <Compile Include="BackgroundClasses\Backdrop.cs" />
     <Compile Include="BackgroundClasses\BatchDrawer.cs" />
     <Compile Include="BackgroundClasses\CollisionManager.cs" />
     <Compile Include="BackgroundClasses\LevelList.cs" />

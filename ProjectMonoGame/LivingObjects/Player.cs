@@ -466,17 +466,6 @@ namespace ProjectMonoGame
                     finnDrawer.DrawAni(facingRight, position, animationIdleRight, animationIdleLeft);
                 }
 
-                //if (isIdle)
-                //{
-                //    if (isJumping && !isGrounded && !isAttacking)
-                //    {
-                //        if (partiDrawer != null)
-                //        {
-                //            partiDrawer.DrawParticle(spriteBatch, animationJumpDust);
-                //        }
-                //    }
-                //}
-
                 if (!isIdle)
                 {
                     if (!isJumping && isGrounded && !isAttacking)
