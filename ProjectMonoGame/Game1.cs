@@ -10,7 +10,7 @@ namespace ProjectMonoGame
         Startscreen,
         Options,
         InGame,
-        Credits
+        Endscreen
     }
 
     public class Game1 : Game
@@ -20,15 +20,15 @@ namespace ProjectMonoGame
 
         LevelList allLevels;
 
-        Texture2D JumpTutorialTexture;
-        Texture2D moveTutorialTexture;
         Texture2D mushroomSpritesheetRight;
         Texture2D mushroomSpritesheetLeft;
 
         GameState gameState;
 
         Menu startScreen;
+        Menu endScreen;
         ImageDrawer title;
+        ImageDrawer thanksES;
         ImageDrawer backdropTitle;
         ImageDrawer levelBackground;
         ImageDrawer moveTutorial;
@@ -60,7 +60,6 @@ namespace ProjectMonoGame
             //Textures
             Texture2D finnSpritesheetLeft = Content.Load<Texture2D>("FinnSpriteLeft");
             Texture2D finnSpritesheetRight = Content.Load<Texture2D>("FinnSpriteRight");
-            Texture2D jumpParticleDust = Content.Load<Texture2D>("DoubleJumpDust");
 
             mushroomSpritesheetLeft = Content.Load<Texture2D>("MushroomLeft");
             mushroomSpritesheetRight = Content.Load<Texture2D>("MushroomRight");
@@ -70,14 +69,18 @@ namespace ProjectMonoGame
             Texture2D startSC = Content.Load<Texture2D>("StartSC");
             Texture2D optionsSC = Content.Load<Texture2D>("OptionSC");
             Texture2D exitSC = Content.Load<Texture2D>("ExitSC");
-            Texture2D loadingScreenTexture = Content.Load<Texture2D>("LoadingScreen");
             Texture2D titleTexture = Content.Load<Texture2D>("TitleSC");
             Texture2D backdropTitleTexture = Content.Load<Texture2D>("BackdropTitle");
             Texture2D goalTexture = Content.Load<Texture2D>("GateGoal");
             Texture2D doorTutorialTexture = Content.Load<Texture2D>("DoorButtonTutorial");
 
-            moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
-            JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
+            Texture2D restartES = Content.Load<Texture2D>("RestartES");
+            Texture2D mainMenuES = Content.Load<Texture2D>("MainMenuES");
+            Texture2D closeGameES = Content.Load<Texture2D>("CloseGameES");
+            Texture2D thanksESTexture = Content.Load<Texture2D>("ThanksES");
+
+            Texture2D moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
+            Texture2D JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
             Texture2D spikeTutorialTexture = Content.Load<Texture2D>("SpikeTutorial");
             Texture2D wallJumpTutorialTexture = Content.Load<Texture2D>("WallJumpTutorial");
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
@@ -89,16 +92,31 @@ namespace ProjectMonoGame
             enemyList = new List<Enemy>();
             levelBackground = new ImageDrawer(backdropOneTexture, new Vector2(0,0), new Vector2(1920,1080), new Vector2(1920,1080));
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            startScreen = new Menu(startSC, optionsSC,exitSC, new KeyboardHandler(), 2);
+
+            Texture2D[] SCOptionTextures = new Texture2D[3];
+            SCOptionTextures[0] = startSC;
+            SCOptionTextures[1] = optionsSC;
+            SCOptionTextures[2] = exitSC;
+
+            Texture2D[] ESOptionTextures = new Texture2D[3];
+            ESOptionTextures[0] = restartES;
+            ESOptionTextures[1] = mainMenuES;
+            ESOptionTextures[2] = closeGameES;
+
+            startScreen = new Menu(SCOptionTextures, new KeyboardHandler(), 3);
+            endScreen = new Menu(ESOptionTextures, new KeyboardHandler(), 3);
+
             title = new ImageDrawer(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
             backdropTitle = new ImageDrawer(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
+            thanksES = new ImageDrawer(thanksESTexture, new Vector2(550, 250), new Vector2(800, 300), new Vector2(800, 300));
+
 
             moveTutorial = new ImageDrawer(moveTutorialTexture, new Vector2(200, 600), new Vector2(405, 333), new Vector2(405, 333));
             jumpTutorial = new ImageDrawer(JumpTutorialTexture, new Vector2(900, 400), new Vector2(400, 330), new Vector2(739, 696));
             spikeTutorial = new ImageDrawer(spikeTutorialTexture, new Vector2(800, 300), new Vector2(400, 400), new Vector2(400, 400));
             wallJumpTutorial = new ImageDrawer(wallJumpTutorialTexture, new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
-            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture,jumpParticleDust, new KeyboardHandler());
+            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, new KeyboardHandler());
         }
 
         protected override void UnloadContent()
@@ -137,6 +155,10 @@ namespace ProjectMonoGame
                         finn.goalReached = false;
                 }
 
+                if (allLevels.currentLevelInt == (allLevels.levelAmount))
+                {
+                    gameState = GameState.Endscreen;
+                }
 
 
                 //if (allLevels.currentLevelInt == 3)
@@ -159,13 +181,32 @@ namespace ProjectMonoGame
                 }
             }
 
+            if (gameState == GameState.Endscreen)
+            {
+                switch (endScreen.Update(gametime))
+                {
+                    case 0:
+                        allLevels.currentLevelInt = 0;
+                        gameState = GameState.InGame;
+                        break;
+                    case 1:
+                        allLevels.currentLevelInt = 0;
+                        gameState = GameState.Startscreen;
+                        break;
+                    case 2:
+                        Exit();
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-            base.Update(gametime);
+                base.Update(gametime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.WhiteSmoke);
+            GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
@@ -211,6 +252,12 @@ namespace ProjectMonoGame
                 finn.Draw(spriteBatch);
             }
 
+            if (gameState == GameState.Endscreen)
+            {
+                backdropTitle.Draw(spriteBatch);
+                thanksES.Draw(spriteBatch);
+                endScreen.Draw(spriteBatch);
+            }
 
             spriteBatch.End();
 

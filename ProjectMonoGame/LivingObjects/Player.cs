@@ -18,7 +18,7 @@ namespace ProjectMonoGame
         public Rectangle rightCollisionRectangle { get; set; }
 
 
-        private Texture2D spritesheetLeft, spritesheetRight, jumpParticleDust, doorButtonTutorial;
+        private Texture2D spritesheetLeft, spritesheetRight, doorButtonTutorial;
 
         public Vector2 position;
 
@@ -72,13 +72,12 @@ namespace ProjectMonoGame
 
 
 
-        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn,Texture2D jumpParticleDustIn, IController inputHandlerIn)
+        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn, IController inputHandlerIn)
         {
             inputHandler = inputHandlerIn;
             position = positionIn;
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
-            jumpParticleDust = jumpParticleDustIn;
             doorButtonTutorial = doorButtonTutorialIn;
 
             aniCreator = new AnimationCreator();
@@ -321,6 +320,11 @@ namespace ProjectMonoGame
                 {
                     if (colliManager.CheckCollider(rightCollisionRectangle, tile.collisionRectangle))
                     {
+                        if (tile.Identity == TileIdentifier.Spike)
+                        {
+                            isDead = true;
+                        }
+
                         if (tile.Identity != TileIdentifier.Gate)
                         {
                             rightColliding = true;
@@ -334,6 +338,11 @@ namespace ProjectMonoGame
 
                     if (colliManager.CheckCollider(leftCollisionRectangle, tile.collisionRectangle))
                     {
+                        if (tile.Identity == TileIdentifier.Spike)
+                        {
+                            isDead = true;
+                        }
+
                         if (tile.Identity != TileIdentifier.Gate)
                         {
                             leftColliding = true;
