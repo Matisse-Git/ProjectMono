@@ -67,16 +67,14 @@ namespace ProjectMonoGame
 
             Texture2D platformSpriteSheet = Content.Load<Texture2D>("TileSet");
             Texture2D spikeTile = Content.Load<Texture2D>("SpikeTile");
-            Texture2D portalTileOne = Content.Load<Texture2D>("PortalEndGoalOne");
-            Texture2D portalTileTwo = Content.Load<Texture2D>("PortalEndGoalTwo");
-            Texture2D portalTileThree = Content.Load<Texture2D>("PortalEndGoalThree");
-            Texture2D portalTileFour = Content.Load<Texture2D>("PortalEndGoalFour");
             Texture2D startSC = Content.Load<Texture2D>("StartSC");
             Texture2D optionsSC = Content.Load<Texture2D>("OptionSC");
             Texture2D exitSC = Content.Load<Texture2D>("ExitSC");
             Texture2D loadingScreenTexture = Content.Load<Texture2D>("LoadingScreen");
             Texture2D titleTexture = Content.Load<Texture2D>("TitleSC");
             Texture2D backdropTitleTexture = Content.Load<Texture2D>("BackdropTitle");
+            Texture2D goalTexture = Content.Load<Texture2D>("GateGoal");
+            Texture2D doorTutorialTexture = Content.Load<Texture2D>("DoorButtonTutorial");
 
             moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
             JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
@@ -85,7 +83,7 @@ namespace ProjectMonoGame
             gameState = GameState.Startscreen;
 
             //Making Objects
-            allLevels = new LevelList(platformSpriteSheet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour);
+            allLevels = new LevelList(platformSpriteSheet, spikeTile, goalTexture);
             enemyList = new List<Enemy>();
             backdropOne = new Backdrop(backdropOneTexture, 200, 300, 1, 1920, new Vector2(0, 0));
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -93,7 +91,7 @@ namespace ProjectMonoGame
             loadingScreen = new LoadingScreen(loadingScreenTexture, new Vector2(0, 0));
             title = new Title(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
             backdropTitle = new Title(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
-            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, jumpParticleDust, new KeyboardHandler());
+            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture,jumpParticleDust, new KeyboardHandler());
         }
 
         protected override void UnloadContent()

@@ -11,10 +11,7 @@ namespace ProjectMonoGame
     {
         public Texture2D tileSet;
         public Texture2D spikeTile;
-        public Texture2D portalTileOne;
-        public Texture2D portalTileTwo;
-        public Texture2D portalTileThree;
-        public Texture2D portalTileFour;
+        public Texture2D goal;
 
         Level levelOne;
         Level levelTwo;
@@ -30,14 +27,11 @@ namespace ProjectMonoGame
         public int currentLevelInt = 0;
         public Level currentLevel;
 
-        public LevelList(Texture2D tileSetIn, Texture2D SpikeTileIn, Texture2D portalTileOneIn, Texture2D portalTileTwoIn, Texture2D portalTileThreeIn, Texture2D portalTileFourIn)
+        public LevelList(Texture2D tileSetIn, Texture2D SpikeTileIn, Texture2D GoalIn)
         {
             tileSet = tileSetIn;
             spikeTile = SpikeTileIn;
-            portalTileOne = portalTileOneIn;
-            portalTileTwo = portalTileTwoIn;
-            portalTileThree = portalTileThreeIn;
-            portalTileFour = portalTileFourIn;
+            goal = GoalIn;
 
             byteArrLevelOne = new byte[,]
             {
@@ -57,8 +51,8 @@ namespace ProjectMonoGame
                {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,17,0,5  },
-               {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,0,5  },
+               {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
+               {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,5  },
                {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1,1,1,1,1,1,1,1,1,1,1,1,2  },
                {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,4,4,4,4,4,4,4,4,4,4,4,4,4  },
                {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,0,0,0,0,0,5,4,4,4,4,4,4,4,4,4,4,4,4,4  },
@@ -93,9 +87,9 @@ namespace ProjectMonoGame
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2,4,0,0,0,0,0,0,5,2,2,2,2,2,2,2,2,2,2,2,2,2  },
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2,4,13,13,13,13,13,13,5,2,2,2,2,2,2,2,2,2,2,2,2,2  },
                {3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,7,2,6,1,1,1,1,1,1,7,2,2,2,2,2,2,2,2,2,2,2,2,2  },
-               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2  },
-               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2  },
-               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2  }
+               {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4  },
+               {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4  },
+               {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4  }
             };
 
             byteArrLevelThree = new byte[,]
@@ -146,7 +140,7 @@ namespace ProjectMonoGame
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
-               {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
+               {4,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
                {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5  },
@@ -162,20 +156,20 @@ namespace ProjectMonoGame
             switch (currentLevelInt)
             {
                 case 0:
-                    levelOne = new Level(tileSet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour, byteArrLevelOne);
+                    levelOne = new Level(tileSet, spikeTile, goal, byteArrLevelOne);
 
                     currentLevel = levelOne;
                     break;
                 case 1:
                     levelOne = null;
-                    levelTwo = new Level(tileSet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour, byteArrLevelTwo);
+                    levelTwo = new Level(tileSet, spikeTile, goal, byteArrLevelTwo);
 
                     currentLevel = levelTwo;
                     break;
                 case 2:
                     levelOne = null;
                     levelTwo = null;
-                    levelThree = new Level(tileSet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour, byteArrLevelThree);
+                    levelThree = new Level(tileSet, spikeTile, goal, byteArrLevelThree);
 
                     currentLevel = levelThree;
                     break;
@@ -183,7 +177,7 @@ namespace ProjectMonoGame
                     levelOne = null;
                     levelTwo = null;
                     levelThree = null;
-                    levelFour = new Level(tileSet, spikeTile, portalTileOne, portalTileTwo, portalTileThree, portalTileFour, byteArrLevelFour);
+                    levelFour = new Level(tileSet, spikeTile, goal, byteArrLevelFour);
 
                     currentLevel = levelFour;
                     break;

@@ -18,7 +18,7 @@ namespace ProjectMonoGame
         public Rectangle rightCollisionRectangle { get; set; }
 
 
-        private Texture2D spritesheetLeft, spritesheetRight, jumpParticleDust;
+        private Texture2D spritesheetLeft, spritesheetRight, jumpParticleDust, doorButtonTutorial;
 
         public Vector2 position;
 
@@ -27,11 +27,11 @@ namespace ProjectMonoGame
                           animationJumpLeft, animationIdleRight,
                           animationWalkingRight, animationAttackRight,
                           animationHitRight, animationJumpRight,
-                          animationDieRight, animationDieLeft, animationJumpDust;
+                          animationDieRight, animationDieLeft, animationJumpDust, animationDoorButtonTutorial;
 
         private AnimationCreator aniCreator;
 
-        private BatchDrawer finnDrawer;
+        private BatchDrawer finnDrawer, tutorialDrawer;
         private ParticleDrawer partiDrawer;
 
         private IController inputHandler;
@@ -42,7 +42,6 @@ namespace ProjectMonoGame
         //Sprite Related
         private int spriteWidth = 32;
         private int spriteScale = 4;
-
 
         //Movement Related
         private bool leftColliding;
@@ -57,6 +56,7 @@ namespace ProjectMonoGame
         private bool holdingRight;
         private bool holdingSpace;
         private bool isHurt;
+        private bool inFrontOfDoor;
         public bool goalReached;
 
         private bool canWallJump = true;
@@ -72,13 +72,14 @@ namespace ProjectMonoGame
 
 
 
-        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D jumpParticleDustIn, IController inputHandlerIn)
+        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn,Texture2D jumpParticleDustIn, IController inputHandlerIn)
         {
             inputHandler = inputHandlerIn;
             position = positionIn;
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
             jumpParticleDust = jumpParticleDustIn;
+            doorButtonTutorial = doorButtonTutorialIn;
 
             aniCreator = new AnimationCreator();
 
@@ -97,6 +98,7 @@ namespace ProjectMonoGame
             animationDieRight = new Animation(200);
             animationJumpRight = new Animation(100);
             animationJumpDust = new Animation(20);
+            animationDoorButtonTutorial = new Animation(999);
             
 
             aniCreator.CreateAniLeft(animationIdleLeft, 1, 9);
@@ -112,6 +114,7 @@ namespace ProjectMonoGame
             aniCreator.CreateAniLeft(animationDieLeft, 19, 23);
             aniCreator.CreateAniRight(animationDieRight, 18, 22);
             aniCreator.CreateAniRight(animationJumpDust, 0, 4);
+            animationDoorButtonTutorial.AddFrame(new Rectangle(0, 0, 16, 16));
         }
 
         public void Update(GameTime gametime, Tile[,] tilesIn, List<Enemy> enemyListIn)
@@ -119,6 +122,8 @@ namespace ProjectMonoGame
             downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
             rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
             leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
+
+            inFrontOfDoor = false;
 
             CheckCollision(tilesIn, enemyListIn);
 
@@ -173,6 +178,13 @@ namespace ProjectMonoGame
                     break;
                 case "Attack":
                     isAttacking = true;
+                    break;
+                case "Up":
+                    if (inFrontOfDoor)
+                    {
+                        goalReached = true;
+                        inFrontOfDoor = false;
+                    }
                     break;
                 case "Null":
                     walkingSpeed = 0;
@@ -309,22 +321,28 @@ namespace ProjectMonoGame
                 {
                     if (colliManager.CheckCollider(rightCollisionRectangle, tile.collisionRectangle))
                     {
-                        rightColliding = true;
-                        jumpHeight = 2;
-                        //if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
-                        //{
-                        //    goalReached = true;
-                        //}
+                        if (tile.Identity != TileIdentifier.Gate)
+                        {
+                            rightColliding = true;
+                            jumpHeight = 2;
+                        }
+                        if (tile.Identity == TileIdentifier.Gate)
+                        {
+                            inFrontOfDoor = true;
+                        }
                     }
 
                     if (colliManager.CheckCollider(leftCollisionRectangle, tile.collisionRectangle))
                     {
-                        leftColliding = true;
-                        jumpHeight = 2;
-                        //if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
-                        //{
-                        //    goalReached = true;
-                        //}
+                        if (tile.Identity != TileIdentifier.Gate)
+                        {
+                            leftColliding = true;
+                            jumpHeight = 2;
+                        }
+                        if (tile.Identity == TileIdentifier.Gate)
+                        {
+                            inFrontOfDoor = true;
+                        }
                     }
 
                     if (gravity >= 12)
@@ -338,10 +356,10 @@ namespace ProjectMonoGame
                         {
                             isDead = true;
                         }
-                        //if (tile is portalTileOne || tile is portalTileTwo || tile is portalTileThree || tile is portalTileFour)
-                        //{
-                        //    goalReached = true;
-                        //}
+                        if (tile.Identity == TileIdentifier.Gate)
+                        {
+                            inFrontOfDoor = true;
+                        }
                         else
                         {
 
@@ -371,7 +389,6 @@ namespace ProjectMonoGame
                 }
             }
         }
-
         public void TakeDamage(GameTime gametime)
         {
             if (isHurt)
@@ -429,6 +446,7 @@ namespace ProjectMonoGame
         public void Draw(SpriteBatch spriteBatch)
         {
             finnDrawer = new BatchDrawer(spriteBatch, spritesheetLeft, spritesheetRight, spriteScale);
+            tutorialDrawer = new BatchDrawer(spriteBatch, doorButtonTutorial, doorButtonTutorial, 2);
 
             if (isDead || goalReached)
             {
@@ -437,6 +455,8 @@ namespace ProjectMonoGame
 
             if (!isDead)
             {
+                if (inFrontOfDoor)
+                    tutorialDrawer.DrawAni(facingRight, new Vector2(position.X + 25, position.Y - 50), animationDoorButtonTutorial, animationDoorButtonTutorial);
 
                 if (isAttacking)
                     finnDrawer.DrawAni(facingRight, position, animationAttackRight, animationAttackLeft);

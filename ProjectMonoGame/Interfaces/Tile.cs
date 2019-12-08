@@ -18,7 +18,8 @@ namespace ProjectMonoGame
         GroundToLeftWall,
         RightWallToGround,
         LeftWallToGround,
-        Spike
+        Spike,
+        Gate
     }
 
     public class Tile
