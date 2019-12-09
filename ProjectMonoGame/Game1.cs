@@ -36,6 +36,8 @@ namespace ProjectMonoGame
         ImageDrawer spikeTutorial;
         ImageDrawer wallJumpTutorial;
 
+        HPBar hpBar;
+
         Player finn;
         List<Enemy> enemyList;
 
@@ -78,6 +80,7 @@ namespace ProjectMonoGame
             Texture2D mainMenuES = Content.Load<Texture2D>("MainMenuES");
             Texture2D closeGameES = Content.Load<Texture2D>("CloseGameES");
             Texture2D thanksESTexture = Content.Load<Texture2D>("ThanksES");
+            Texture2D HPTexture = Content.Load<Texture2D>("HPTexture");
 
             Texture2D moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
             Texture2D JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
@@ -106,6 +109,8 @@ namespace ProjectMonoGame
             startScreen = new Menu(SCOptionTextures, new KeyboardHandler(), 3);
             endScreen = new Menu(ESOptionTextures, new KeyboardHandler(), 3);
 
+            hpBar = new HPBar(HPTexture);
+
             title = new ImageDrawer(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
             backdropTitle = new ImageDrawer(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
             thanksES = new ImageDrawer(thanksESTexture, new Vector2(550, 250), new Vector2(800, 300), new Vector2(800, 300));
@@ -116,7 +121,7 @@ namespace ProjectMonoGame
             spikeTutorial = new ImageDrawer(spikeTutorialTexture, new Vector2(800, 300), new Vector2(400, 400), new Vector2(400, 400));
             wallJumpTutorial = new ImageDrawer(wallJumpTutorialTexture, new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
-            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, new KeyboardHandler());
+            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, hpBar, new KeyboardHandler());
         }
 
         protected override void UnloadContent()
@@ -127,6 +132,7 @@ namespace ProjectMonoGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
 
             if (gameState == GameState.Startscreen)
             {
@@ -179,6 +185,9 @@ namespace ProjectMonoGame
                         enemy.Update(gametime);
                     }
                 }
+                gameState = finn.GameOver();
+                if (finn.resetLevels)
+                    allLevels.currentLevelInt = 0;
             }
 
             if (gameState == GameState.Endscreen)
@@ -250,6 +259,7 @@ namespace ProjectMonoGame
                     }
                 }
                 finn.Draw(spriteBatch);
+
             }
 
             if (gameState == GameState.Endscreen)

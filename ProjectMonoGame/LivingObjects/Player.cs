@@ -38,6 +38,8 @@ namespace ProjectMonoGame
 
         private CollisionManager colliManager;
 
+        public HPBar hpBar;
+
 
         //Sprite Related
         private int spriteWidth = 32;
@@ -58,10 +60,11 @@ namespace ProjectMonoGame
         private bool isHurt;
         private bool inFrontOfDoor;
         public bool goalReached;
+        public bool resetLevels = false;
 
         private bool canWallJump = true;
         private int count = 0;
-        private int HP = 2;
+        private int HP = 10;
 
 
         public float gravity { get; set; } = 4;
@@ -72,13 +75,15 @@ namespace ProjectMonoGame
 
 
 
-        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn, IController inputHandlerIn)
+        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn, HPBar hpBarIn, IController inputHandlerIn)
         {
             inputHandler = inputHandlerIn;
             position = positionIn;
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
             doorButtonTutorial = doorButtonTutorialIn;
+
+            hpBar = hpBarIn;
 
             aniCreator = new AnimationCreator();
 
@@ -262,6 +267,7 @@ namespace ProjectMonoGame
                         position.Y = 900;
                         isDead = false;
                         facingRight = true;
+                        hpBar.Update();
                     }
                 }
                 if (!facingRight)
@@ -272,6 +278,7 @@ namespace ProjectMonoGame
                         position.Y = 900;
                         isDead = false;
                         facingRight = true;
+                        hpBar.Update();
                     }
 
                 }
@@ -451,11 +458,23 @@ namespace ProjectMonoGame
             leftColliding = false;
             holdingSpace = false;
         }
+        public GameState GameOver()
+        {
+            if (hpBar.HP == 0)
+            {
+                hpBar.Restore();
+                resetLevels = true;
+                return GameState.Startscreen;
+            }
+            else
+                return GameState.InGame;
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             finnDrawer = new BatchDrawer(spriteBatch, spritesheetLeft, spritesheetRight, spriteScale);
             tutorialDrawer = new BatchDrawer(spriteBatch, doorButtonTutorial, doorButtonTutorial, 2);
+            hpBar.Draw(spriteBatch);
 
             if (isDead || goalReached)
             {
