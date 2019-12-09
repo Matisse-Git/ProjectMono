@@ -52,12 +52,12 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Interfaces\IGravitational.cs" />
     <Compile Include="BackgroundClasses\Level.cs" />
-    <Compile Include="LivingObjects\MushroomEnemy.cs" />
     <Compile Include="LivingObjects\Player.cs" />
     <Compile Include="BackgroundClasses\Program.cs" />
     <Compile Include="ParticleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\Tile.cs" />
+    <Compile Include="ScoreHUD.cs" />
     <Compile Include="Startscreen.cs" />
   </ItemGroup>
   <ItemGroup>

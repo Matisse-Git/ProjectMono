@@ -27,7 +27,7 @@ namespace ProjectMonoGame
                     return "Left";
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                     return "RightJump";
@@ -36,20 +36,23 @@ namespace ProjectMonoGame
                     return "Right";
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 return "Jump";
 
-            if (Keyboard.GetState().IsKeyDown(Keys.X))
+            else if (Keyboard.GetState().IsKeyDown(Keys.X))
                 return "Attack";
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
                 return "Down";
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 return "Up";
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 return "Confirm";
+
+            else if (Keyboard.GetState().IsKeyDown(Keys.Back))
+                return "Back";
 
             else
                 return "Null";

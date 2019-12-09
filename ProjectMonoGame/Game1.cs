@@ -10,6 +10,7 @@ namespace ProjectMonoGame
         Startscreen,
         Options,
         InGame,
+        GameOver,
         Endscreen
     }
 
@@ -27,8 +28,13 @@ namespace ProjectMonoGame
 
         Menu startScreen;
         Menu endScreen;
+        Menu gameOverScreen;
         ImageDrawer title;
         ImageDrawer thanksES;
+        ImageDrawer fullscreenQuestion;
+        ImageDrawer fullscreenYes;
+        ImageDrawer fullscreenNo;
+        ImageDrawer gameOver;
         ImageDrawer backdropTitle;
         ImageDrawer levelBackground;
         ImageDrawer moveTutorial;
@@ -36,12 +42,13 @@ namespace ProjectMonoGame
         ImageDrawer spikeTutorial;
         ImageDrawer wallJumpTutorial;
 
+        float currentTime = 0;
+        float lastTime = 0;
+
+        ScoreHUD score;
         HPBar hpBar;
 
         Player finn;
-        List<Enemy> enemyList;
-
-        bool enemyMade = false;
 
         public Game1()
         {
@@ -81,6 +88,14 @@ namespace ProjectMonoGame
             Texture2D closeGameES = Content.Load<Texture2D>("CloseGameES");
             Texture2D thanksESTexture = Content.Load<Texture2D>("ThanksES");
             Texture2D HPTexture = Content.Load<Texture2D>("HPTexture");
+            Texture2D scoreTexture = Content.Load<Texture2D>("ScoreTexture");
+            Texture2D scoreNumberTexture = Content.Load<Texture2D>("ScoreNumberTexture");
+            Texture2D fullscreenTexture = Content.Load<Texture2D>("FullscreenTexture");
+            Texture2D fullscreenYesTexture = Content.Load<Texture2D>("FullscreenYesTexture");
+            Texture2D fullscreenNoTexture = Content.Load<Texture2D>("FullscreenNoTexture");
+            Texture2D gameOverRestartTexture = Content.Load<Texture2D>("GameOverRestartTexture");
+            Texture2D gameOverCloseGameTexture = Content.Load<Texture2D>("GameOverCloseGameTexture");
+            Texture2D gameOverTexture = Content.Load<Texture2D>("GameOverTexture");
 
             Texture2D moveTutorialTexture = Content.Load<Texture2D>("MoveTutorial");
             Texture2D JumpTutorialTexture = Content.Load<Texture2D>("JumpTutorial");
@@ -92,7 +107,6 @@ namespace ProjectMonoGame
 
             //Making Objects
             allLevels = new LevelList(platformSpriteSheet, spikeTile, goalTexture);
-            enemyList = new List<Enemy>();
             levelBackground = new ImageDrawer(backdropOneTexture, new Vector2(0,0), new Vector2(1920,1080), new Vector2(1920,1080));
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -106,14 +120,25 @@ namespace ProjectMonoGame
             ESOptionTextures[1] = mainMenuES;
             ESOptionTextures[2] = closeGameES;
 
+            Texture2D[] GOOptionTextures = new Texture2D[2];
+            GOOptionTextures[0] = gameOverRestartTexture;
+            GOOptionTextures[1] = gameOverCloseGameTexture;
+
             startScreen = new Menu(SCOptionTextures, new KeyboardHandler(), 3);
             endScreen = new Menu(ESOptionTextures, new KeyboardHandler(), 3);
+            gameOverScreen = new Menu(GOOptionTextures, new KeyboardHandler(), 2);
+
+            score = new ScoreHUD(scoreTexture, scoreNumberTexture);
 
             hpBar = new HPBar(HPTexture);
 
             title = new ImageDrawer(titleTexture, new Vector2(430, -150), new Vector2(1000,1000), new Vector2(800,800));
             backdropTitle = new ImageDrawer(backdropTitleTexture, new Vector2(0, 0), new Vector2(1920, 1080), new Vector2(1920, 1080));
             thanksES = new ImageDrawer(thanksESTexture, new Vector2(550, 250), new Vector2(800, 300), new Vector2(800, 300));
+            fullscreenQuestion = new ImageDrawer(fullscreenTexture, new Vector2(550, 250), new Vector2(800, 800), new Vector2(800, 800));
+            fullscreenNo = new ImageDrawer(fullscreenNoTexture, new Vector2(750, 550), new Vector2(400, 400), new Vector2(800, 800));
+            fullscreenYes = new ImageDrawer(fullscreenYesTexture, new Vector2(750, 550), new Vector2(400, 400), new Vector2(800, 800));
+            gameOver = new ImageDrawer(gameOverTexture, new Vector2(550, 250), new Vector2(800, 800), new Vector2(800, 800));
 
 
             moveTutorial = new ImageDrawer(moveTutorialTexture, new Vector2(200, 600), new Vector2(405, 333), new Vector2(405, 333));
@@ -122,6 +147,7 @@ namespace ProjectMonoGame
             wallJumpTutorial = new ImageDrawer(wallJumpTutorialTexture, new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
             finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, hpBar, new KeyboardHandler());
+            allLevels.Update();
         }
 
         protected override void UnloadContent()
@@ -151,6 +177,24 @@ namespace ProjectMonoGame
                 }
             }
 
+            if (gameState == GameState.Options)
+            {
+                currentTime += (float)gametime.ElapsedGameTime.TotalSeconds;
+                if ((currentTime - lastTime) > 1f)
+                {
+                    KeyboardHandler keyboardHandler = new KeyboardHandler();
+                    if (keyboardHandler.GetButtonPressed() == "Confirm")
+                    {
+                        graphics.ToggleFullScreen();
+                        lastTime = currentTime;
+                    }
+                    else if(keyboardHandler.GetButtonPressed() == "Back")
+                    {
+                        gameState = GameState.Startscreen;
+                    }
+                }
+            }
+
             if (gameState == GameState.InGame)
             {
 
@@ -159,6 +203,7 @@ namespace ProjectMonoGame
                         gameState = GameState.InGame;
                         allLevels.currentLevelInt++;
                         finn.goalReached = false;
+                        allLevels.Update();
                 }
 
                 if (allLevels.currentLevelInt == (allLevels.levelAmount))
@@ -166,30 +211,29 @@ namespace ProjectMonoGame
                     gameState = GameState.Endscreen;
                 }
 
-
-                //if (allLevels.currentLevelInt == 3)
-                //{
-                //    if (!enemyMade)
-                //    {
-                //        enemyList.Add(new MushroomEnemy(new Vector2(1500, 890), mushroomSpritesheetLeft, mushroomSpritesheetRight));
-                //        enemyMade = true;
-                //    }
-                //}
-
-                allLevels.Update();
-                finn.Update(gametime, allLevels.currentLevel.tileArr, enemyList);
-                foreach (Enemy enemy in enemyList)
-                {
-                    if (enemy != null)
-                    {
-                        enemy.Update(gametime);
-                    }
-                }
+                finn.Update(gametime, allLevels.currentLevel.tileArr);
                 if (finn.resetLevels)
                 {
                     allLevels.currentLevelInt = 0;
-                    gameState = GameState.Startscreen;
+                    allLevels.Update();
+                    finn.score = 0;
+                    score.Update(finn.score);
+                    gameState = GameState.GameOver;
                     finn.resetLevels = false;
+                }
+                score.Update(finn.score);
+            }
+
+            if (gameState == GameState.GameOver)
+            {
+                switch (gameOverScreen.Update(gametime))
+                {
+                    case 0:
+                        gameState = GameState.InGame;
+                        break;
+                    case 1:
+                        Exit();
+                        break;
                 }
             }
 
@@ -231,6 +275,20 @@ namespace ProjectMonoGame
                 title.Draw(spriteBatch);
             }
 
+            if ( gameState == GameState.Options)
+            {
+                backdropTitle.Draw(spriteBatch);
+
+                if (graphics.IsFullScreen)
+                {
+                    fullscreenYes.Draw(spriteBatch);
+                }
+                else
+                    fullscreenNo.Draw(spriteBatch);
+                fullscreenQuestion.Draw(spriteBatch);
+
+            }
+
             if (gameState == GameState.InGame)
             {
                 levelBackground.Draw(spriteBatch);
@@ -254,15 +312,17 @@ namespace ProjectMonoGame
                     wallJumpTutorial.Draw(spriteBatch);
 
                 allLevels.currentLevel.DrawLevel(spriteBatch);
-                foreach (Enemy enemy in enemyList)
-                {
-                    if (enemy != null)
-                    {
-                        enemy.Draw(spriteBatch);
-                    }
-                }
+                score.Draw(spriteBatch);
                 finn.Draw(spriteBatch);
 
+            }
+
+            if (gameState == GameState.GameOver)
+            {
+                backdropTitle.Draw(spriteBatch);
+
+                gameOverScreen.Draw(spriteBatch);
+                gameOver.Draw(spriteBatch);
             }
 
             if (gameState == GameState.Endscreen)

@@ -72,7 +72,8 @@ namespace ProjectMonoGame
                         tileArr[i, j] = new Tile(16, 3, new Vector2(j * 16 * 3, (int)(i * (16 * 2.85))), spikeTile, new Vector2(0, 3), TileIdentifier.Spike);
                     if (byteArr[i, j] == 20)
                         tileArr[i, j] = new Tile(16, 3, new Vector2(j * 16 * 3, (int)(i * (16 * 2.85))), tileSet, new Vector2(4, 0), TileIdentifier.FloatingTileCenter);
-
+                    if (byteArr[i, j] == 21)
+                        tileArr[i, j] = new Tile(16, 3, new Vector2(j * 16 * 3, (int)(i * (16 * 2.85))), spikeTile, new Vector2(0, 4), TileIdentifier.Coin);
                 }
             }
         }

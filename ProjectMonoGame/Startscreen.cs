@@ -20,6 +20,8 @@ namespace ProjectMonoGame
 
         private float currentTime;
         private float lastTime = 0;
+        private float currentTime2;
+        private float lastTime2 = 0;
 
         public Menu(Texture2D[] optionTexturesIn, IController inputHandlerIn, int menuItemsIn)
         {
@@ -57,11 +59,16 @@ namespace ProjectMonoGame
                 lastTime = currentTime;
             }
         }
-        public int ConfirmChoice()
+        public int ConfirmChoice(GameTime gametime)
         {
-            if (inputHandler.GetButtonPressed() == "Confirm")
+            currentTime2 += (float)gametime.ElapsedGameTime.TotalSeconds;
+            if ((currentTime2 - lastTime2) > 1f)
             {
-                return position;
+                if (inputHandler.GetButtonPressed() == "Confirm")
+                {
+                    lastTime2 = currentTime2;
+                    return position;
+                }
             }
             return -1;
         }
@@ -69,7 +76,7 @@ namespace ProjectMonoGame
         public int Update(GameTime gametime)
         {
             ChangePos(gametime);
-            return ConfirmChoice();
+            return ConfirmChoice(gametime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -88,6 +95,7 @@ namespace ProjectMonoGame
         Vector2 screenPos;
         Vector2 targetSize;
         Vector2 sourceSize;
+        Vector2 spritesheetPos = new Vector2(0, 0);
 
         public ImageDrawer(Texture2D imageIn, Vector2 screenPosIn, Vector2 targetSizeIn, Vector2 sourceSizeIn)
         {
@@ -115,6 +123,20 @@ namespace ProjectMonoGame
             sourceSize = sourceSizeIn;
         }
 
+        //spritesheet
+        public ImageDrawer(Texture2D imageIn, Vector2 screenPosIn, Vector2 targetSizeIn, Vector2 sourceSizeIn, Vector2 spritesheetPosIn)
+        {
+            images = new Texture2D[frameAmount];
+            images[0] = imageIn;
+            currentImage = images[0];
+            spritesheetPos = spritesheetPosIn;
+
+            screenPos = screenPosIn;
+
+            targetSize = targetSizeIn;
+            sourceSize = sourceSizeIn;
+        }
+
         public void Update()
         {
             if ((currentImageInt + 1) > frameAmount)            
@@ -128,7 +150,7 @@ namespace ProjectMonoGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(currentImage, new Rectangle((int)screenPos.X, (int)screenPos.Y, (int)targetSize.X, (int)targetSize.Y), new Rectangle(0, 0, (int)sourceSize.X, (int)sourceSize.Y), Color.White);
+            spriteBatch.Draw(currentImage, new Rectangle((int)screenPos.X, (int)screenPos.Y, (int)targetSize.X, (int)targetSize.Y), new Rectangle((int)spritesheetPos.X , (int)spritesheetPos.Y, (int)sourceSize.X, (int)sourceSize.Y), Color.White);
         }
     }
 }

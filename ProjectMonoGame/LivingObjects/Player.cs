@@ -32,7 +32,6 @@ namespace ProjectMonoGame
         private AnimationCreator aniCreator;
 
         private BatchDrawer finnDrawer, tutorialDrawer;
-        private ParticleDrawer partiDrawer;
 
         private IController inputHandler;
 
@@ -65,6 +64,7 @@ namespace ProjectMonoGame
         private bool canWallJump = true;
         private int count = 0;
         private int HP = 10;
+        public int score = 0;
 
 
         public float gravity { get; set; } = 4;
@@ -121,7 +121,7 @@ namespace ProjectMonoGame
             animationDoorButtonTutorial.AddFrame(new Rectangle(0, 0, 16, 16));
         }
 
-        public void Update(GameTime gametime, Tile[,] tilesIn, List<Enemy> enemyListIn)
+        public void Update(GameTime gametime, Tile[,] tilesIn)
         {
             downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
             rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
@@ -129,7 +129,7 @@ namespace ProjectMonoGame
 
             inFrontOfDoor = false;
 
-            CheckCollision(tilesIn, enemyListIn);
+            CheckCollision(tilesIn);
             GameOver();
 
             if (!isDead)
@@ -320,7 +320,7 @@ namespace ProjectMonoGame
                 }
             }
         }
-        private void CheckCollision(Tile[,] tilesIn, List<Enemy> enemyListIn)
+        private void CheckCollision(Tile[,] tilesIn)
         {
             foreach (Tile tile in tilesIn)
             {
@@ -332,13 +332,17 @@ namespace ProjectMonoGame
                         {
                             isDead = true;
                         }
-
-                        if (tile.Identity != TileIdentifier.Gate)
+                        else if (tile.Identity == TileIdentifier.Coin)
+                        {
+                            score++;
+                            tile.Remove();
+                        }
+                        else if (tile.Identity != TileIdentifier.Gate && tile.Identity != TileIdentifier.Coin)
                         {
                             rightColliding = true;
                             jumpHeight = 2;
                         }
-                        if (tile.Identity == TileIdentifier.Gate)
+                        else if (tile.Identity == TileIdentifier.Gate)
                         {
                             inFrontOfDoor = true;
                         }
@@ -350,16 +354,22 @@ namespace ProjectMonoGame
                         {
                             isDead = true;
                         }
+                        else if (tile.Identity == TileIdentifier.Coin)
+                        {
+                            score++;
+                            tile.Remove();
+                        }
 
-                        if (tile.Identity != TileIdentifier.Gate)
+                        else if (tile.Identity != TileIdentifier.Gate && tile.Identity != TileIdentifier.Coin)
                         {
                             leftColliding = true;
                             jumpHeight = 2;
                         }
-                        if (tile.Identity == TileIdentifier.Gate)
+                        else if (tile.Identity == TileIdentifier.Gate)
                         {
                             inFrontOfDoor = true;
                         }
+
                     }
 
                     if (gravity >= 12)
@@ -373,9 +383,14 @@ namespace ProjectMonoGame
                         {
                             isDead = true;
                         }
-                        if (tile.Identity == TileIdentifier.Gate)
+                        else if (tile.Identity == TileIdentifier.Gate)
                         {
                             inFrontOfDoor = true;
+                        }
+                        else if (tile.Identity == TileIdentifier.Coin)
+                        {
+                            score++;
+                            tile.Remove();
                         }
                         else
                         {
@@ -393,16 +408,6 @@ namespace ProjectMonoGame
                         isGrounded = false;
                         isJumping = true;
                     }
-                }
-            }
-        
-
-            foreach (Enemy enemy in enemyListIn)
-            {
-                if (colliManager.CheckCollider(downCollisionRectangle, enemy.collisionRectangle) || colliManager.CheckCollider(leftCollisionRectangle,
-                   enemy.collisionRectangle) || colliManager.CheckCollider(rightCollisionRectangle, enemy.collisionRectangle))
-                {
-                    isHurt = true;
                 }
             }
         }

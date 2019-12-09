@@ -25,6 +25,7 @@ namespace ProjectMonoGame
         FloatingTileCenter,
         FloatingTileRight,
         Spike,
+        Coin,
         Gate
     }
 
@@ -55,6 +56,13 @@ namespace ProjectMonoGame
             tile.AddFrame(new Rectangle((tileWidthIn * (int)tilePos.X), (tileWidthIn * (int)tilePos.Y), tileWidthIn, tileWidthIn));
 
         }
+
+        public void Remove()
+        {
+            collisionRectangle.Y += 5000;
+            position.Y += 5000;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             tileDrawer = new TileDrawer(spriteBatch, tileSet, tileScale, tileWidth);
