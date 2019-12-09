@@ -185,9 +185,12 @@ namespace ProjectMonoGame
                         enemy.Update(gametime);
                     }
                 }
-                gameState = finn.GameOver();
                 if (finn.resetLevels)
+                {
                     allLevels.currentLevelInt = 0;
+                    gameState = GameState.Startscreen;
+                    finn.resetLevels = false;
+                }
             }
 
             if (gameState == GameState.Endscreen)

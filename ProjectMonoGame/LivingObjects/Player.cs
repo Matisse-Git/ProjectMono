@@ -130,6 +130,7 @@ namespace ProjectMonoGame
             inFrontOfDoor = false;
 
             CheckCollision(tilesIn, enemyListIn);
+            GameOver();
 
             if (!isDead)
             {
@@ -458,16 +459,13 @@ namespace ProjectMonoGame
             leftColliding = false;
             holdingSpace = false;
         }
-        public GameState GameOver()
+        public void GameOver()
         {
             if (hpBar.HP == 0)
             {
                 hpBar.Restore();
                 resetLevels = true;
-                return GameState.Startscreen;
             }
-            else
-                return GameState.InGame;
         }
 
         public void Draw(SpriteBatch spriteBatch)

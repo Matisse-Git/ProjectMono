@@ -27,7 +27,7 @@ namespace ProjectMonoGame
         byte[,] byteArrLevelFive;
         byte[,] byteArrLevelSix;
 
-        public int currentLevelInt = 0;
+        public int currentLevelInt = 5;
         public int levelAmount = 6;
         public Level currentLevel;
 
