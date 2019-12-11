@@ -23,6 +23,7 @@ namespace ProjectMonoGame
 
         Texture2D mushroomSpritesheetRight;
         Texture2D mushroomSpritesheetLeft;
+        Texture2D collisionRectangleTexture;
 
         GameState gameState;
 
@@ -41,6 +42,10 @@ namespace ProjectMonoGame
         ImageDrawer jumpTutorial;
         ImageDrawer spikeTutorial;
         ImageDrawer wallJumpTutorial;
+        ImageDrawer collisionRectangle;
+        ImageDrawer collisionRightRectangle;
+        ImageDrawer collisionLeftRectangle;
+        List<ImageDrawer> tileCollisionRectangles;
 
         float currentTime = 0;
         float lastTime = 0;
@@ -102,6 +107,7 @@ namespace ProjectMonoGame
             Texture2D spikeTutorialTexture = Content.Load<Texture2D>("SpikeTutorial");
             Texture2D wallJumpTutorialTexture = Content.Load<Texture2D>("WallJumpTutorial");
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
+            collisionRectangleTexture = Content.Load<Texture2D>("CollisionRectangle");
 
             gameState = GameState.Startscreen;
 
@@ -139,6 +145,8 @@ namespace ProjectMonoGame
             fullscreenNo = new ImageDrawer(fullscreenNoTexture, new Vector2(750, 550), new Vector2(400, 400), new Vector2(800, 800));
             fullscreenYes = new ImageDrawer(fullscreenYesTexture, new Vector2(750, 550), new Vector2(400, 400), new Vector2(800, 800));
             gameOver = new ImageDrawer(gameOverTexture, new Vector2(550, 250), new Vector2(800, 800), new Vector2(800, 800));
+            collisionRectangle = new ImageDrawer(collisionRectangleTexture, new Vector2(0, 0), new Vector2(0, 0), new Vector2(16, 16));
+            tileCollisionRectangles = new List<ImageDrawer>();
 
 
             moveTutorial = new ImageDrawer(moveTutorialTexture, new Vector2(200, 600), new Vector2(405, 333), new Vector2(405, 333));
@@ -222,6 +230,15 @@ namespace ProjectMonoGame
                     finn.resetLevels = false;
                 }
                 score.Update(finn.score);
+                tileCollisionRectangles.Clear();
+                foreach (Tile tile in allLevels.currentLevel.tileArr)
+                {
+                    if (tile != null)
+                        tileCollisionRectangles.Add(new ImageDrawer(collisionRectangleTexture, new Vector2(tile.collisionRectangle.X, tile.collisionRectangle.Y), new Vector2(tile.collisionRectangle.Width, tile.collisionRectangle.Height), new Vector2(16, 16)));
+                }
+                collisionRectangle = new ImageDrawer(collisionRectangleTexture, new Vector2(finn.downCollisionRectangle.X, finn.downCollisionRectangle.Y), new Vector2(finn.downCollisionRectangle.Width, finn.downCollisionRectangle.Height), new Vector2(16, 16));
+                collisionLeftRectangle = new ImageDrawer(collisionRectangleTexture, new Vector2(finn.leftCollisionRectangle.X, finn.leftCollisionRectangle.Y), new Vector2(finn.leftCollisionRectangle.Width, finn.leftCollisionRectangle.Height), new Vector2(16, 16));
+                collisionRightRectangle = new ImageDrawer(collisionRectangleTexture, new Vector2(finn.rightCollisionRectangle.X, finn.rightCollisionRectangle.Y), new Vector2(finn.rightCollisionRectangle.Width, finn.rightCollisionRectangle.Height), new Vector2(16, 16));
             }
 
             if (gameState == GameState.GameOver)
@@ -312,8 +329,16 @@ namespace ProjectMonoGame
                     wallJumpTutorial.Draw(spriteBatch);
 
                 allLevels.currentLevel.DrawLevel(spriteBatch);
+
+                foreach (ImageDrawer cs in tileCollisionRectangles)
+                {
+                    cs.Draw(spriteBatch);
+                }
                 score.Draw(spriteBatch);
                 finn.Draw(spriteBatch);
+                collisionRectangle.Draw(spriteBatch);
+                collisionLeftRectangle.Draw(spriteBatch);
+                collisionRightRectangle.Draw(spriteBatch);
 
             }
 

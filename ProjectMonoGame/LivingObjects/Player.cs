@@ -123,9 +123,20 @@ namespace ProjectMonoGame
 
         public void Update(GameTime gametime, Tile[,] tilesIn)
         {
-            downCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 2), (int)position.Y + ((spriteWidth * spriteScale) / 3), 1, ((spriteWidth * spriteScale) / 8));
-            rightCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 4, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
-            leftCollisionRectangle = new Rectangle((int)position.X + ((spriteWidth * spriteScale) / 8) * 2, (int)position.Y - ((spriteWidth * spriteScale) / 8), (spriteWidth * spriteScale) / 4, (spriteWidth * spriteScale) / 4);
+            if (facingRight)
+            {
+                downCollisionRectangle = new Rectangle((int)position.X + 50, (int)position.Y + 87, 16, 16);
+                rightCollisionRectangle = new Rectangle((int)position.X + 75, (int)position.Y + 40, 16, 45);
+                leftCollisionRectangle = new Rectangle((int)position.X + 30, (int)position.Y + 40, 16, 45);
+            }
+
+            else
+            {
+                downCollisionRectangle = new Rectangle((int)position.X + 65, (int)position.Y + 87, 16, 16);
+                rightCollisionRectangle = new Rectangle((int)position.X + 90, (int)position.Y + 40, 16, 45);
+                leftCollisionRectangle = new Rectangle((int)position.X + 45, (int)position.Y + 40, 16, 45);
+            }
+
 
             inFrontOfDoor = false;
 

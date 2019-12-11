@@ -51,7 +51,7 @@ namespace ProjectMonoGame
             tileSet = tileSetIn;
             Identity = IdentityIn;
 
-            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y - tileWidth * tileScale, (tileWidth * tileScale), tileWidth * tileScale);
+            collisionRectangle = new Rectangle((int)positionIn.X, (int)positionIn.Y, (tileWidth * tileScale), tileWidth * tileScale);
             tile = new Animation(999);
             tile.AddFrame(new Rectangle((tileWidthIn * (int)tilePos.X), (tileWidthIn * (int)tilePos.Y), tileWidthIn, tileWidthIn));
 
