@@ -330,15 +330,15 @@ namespace ProjectMonoGame
 
                 allLevels.currentLevel.DrawLevel(spriteBatch);
 
-                foreach (ImageDrawer cs in tileCollisionRectangles)
-                {
-                    cs.Draw(spriteBatch);
-                }
+                //foreach (ImageDrawer cs in tileCollisionRectangles)
+                //{
+                //    cs.Draw(spriteBatch);
+                //}
                 score.Draw(spriteBatch);
                 finn.Draw(spriteBatch);
-                collisionRectangle.Draw(spriteBatch);
-                collisionLeftRectangle.Draw(spriteBatch);
-                collisionRightRectangle.Draw(spriteBatch);
+                //collisionRectangle.Draw(spriteBatch);
+                //collisionLeftRectangle.Draw(spriteBatch);
+                //collisionRightRectangle.Draw(spriteBatch);
 
             }
 
