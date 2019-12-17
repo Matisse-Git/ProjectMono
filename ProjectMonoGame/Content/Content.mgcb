@@ -37,6 +37,12 @@
 /processorParam:TextureFormat=Color
 /build:BackdropTwo.jpg
 
+#begin BackgroundMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BackgroundMusic.mp3
+
 #begin CloseGameES.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -193,6 +199,12 @@
 /processorParam:TextureFormat=Color
 /build:GateGoal.png
 
+#begin HitGroundSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:HitGroundSFX.wav
+
 #begin HPTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -301,6 +313,12 @@
 /processorParam:TextureFormat=Color
 /build:RestartES.png
 
+#begin RunningSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:RunningSFX.wav
+
 #begin ScoreNumberTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -324,6 +342,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ScoreTexture.png
+
+#begin SFX/Dying/SpikesSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Dying/SpikesSFX.wav
+
+#begin SFX/Finn/FootstepsSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Finn/FootstepsSFX.wav
+
+#begin SFX/Finn/JumpSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Finn/JumpSFX.wav
+
+#begin SFX/Finn/LandSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Finn/LandSFX.wav
+
+#begin SFX/Finn/WallJumpSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Finn/WallJumpSFX.wav
+
+#begin SFX/Finn/WallSlideSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Finn/WallSlideSFX.wav
 
 #begin SpikeTile.png
 /importer:TextureImporter
