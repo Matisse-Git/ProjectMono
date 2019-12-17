@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Audio;
 
 namespace ProjectMonoGame
 {
@@ -46,6 +47,7 @@ namespace ProjectMonoGame
         ImageDrawer collisionRightRectangle;
         ImageDrawer collisionLeftRectangle;
         List<ImageDrawer> tileCollisionRectangles;
+        SoundEffect runningSFX;
 
         float currentTime = 0;
         float lastTime = 0;
@@ -109,6 +111,10 @@ namespace ProjectMonoGame
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
             collisionRectangleTexture = Content.Load<Texture2D>("CollisionRectangle");
 
+            runningSFX = Content.Load<SoundEffect>("RunningSFX");
+            List<SoundEffect> playerSFX = new List<SoundEffect>();
+            playerSFX.Add(runningSFX);
+
             gameState = GameState.Startscreen;
 
             //Making Objects
@@ -154,7 +160,7 @@ namespace ProjectMonoGame
             spikeTutorial = new ImageDrawer(spikeTutorialTexture, new Vector2(800, 300), new Vector2(400, 400), new Vector2(400, 400));
             wallJumpTutorial = new ImageDrawer(wallJumpTutorialTexture, new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
-            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, hpBar, new KeyboardHandler());
+            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, hpBar, new KeyboardHandler(), playerSFX);
             allLevels.Update();
         }
 

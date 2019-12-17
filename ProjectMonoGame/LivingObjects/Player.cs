@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -66,24 +67,31 @@ namespace ProjectMonoGame
         private int HP = 10;
         public int score = 0;
 
+        SoundEffectInstance runInstance;
 
         public float gravity { get; set; } = 4;
         private float walkingSpeed = 0;
         private float walkingSpeedAssign = 8;
         private double jumpHeight = 20;
 
+        private List<SoundEffect> playerSFX;
 
 
 
-        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn, HPBar hpBarIn, IController inputHandlerIn)
+        public Player(Vector2 positionIn, Texture2D textureInLeft, Texture2D textureInRight, Texture2D doorButtonTutorialIn, HPBar hpBarIn, IController inputHandlerIn, List<SoundEffect> playerSFXIn)
         {
             inputHandler = inputHandlerIn;
             position = positionIn;
             spritesheetLeft = textureInLeft;
             spritesheetRight = textureInRight;
             doorButtonTutorial = doorButtonTutorialIn;
+            playerSFX = playerSFXIn;
 
             hpBar = hpBarIn;
+
+            runInstance = playerSFX[0].CreateInstance();
+            runInstance.IsLooped = true;
+            runInstance.Play();
 
             aniCreator = new AnimationCreator();
 
@@ -103,7 +111,7 @@ namespace ProjectMonoGame
             animationJumpRight = new Animation(100);
             animationJumpDust = new Animation(20);
             animationDoorButtonTutorial = new Animation(999);
-            
+
 
             aniCreator.CreateAniLeft(animationIdleLeft, 1, 9);
             aniCreator.CreateAniRight(animationIdleRight, 0, 8);
@@ -150,6 +158,7 @@ namespace ProjectMonoGame
                 WallJump(gametime);
                 DoAttack(gametime);
                 FinishPose(gametime);
+                playRunSFX();
             }
             FallDead(gametime);
 
@@ -474,6 +483,13 @@ namespace ProjectMonoGame
             rightColliding = false;
             leftColliding = false;
             holdingSpace = false;
+        }
+        private void playRunSFX()
+        {
+            if (!isJumping && !isIdle)
+                runInstance.Resume();
+            else
+                runInstance.Pause();
         }
         public void GameOver()
         {

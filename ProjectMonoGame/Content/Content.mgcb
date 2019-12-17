@@ -301,6 +301,12 @@
 /processorParam:TextureFormat=Color
 /build:RestartES.png
 
+#begin RunningSFX.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:RunningSFX.wav
+
 #begin ScoreNumberTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
