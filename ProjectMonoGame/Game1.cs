@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace ProjectMonoGame
 {
@@ -48,6 +49,7 @@ namespace ProjectMonoGame
         ImageDrawer collisionLeftRectangle;
         List<ImageDrawer> tileCollisionRectangles;
         SoundEffect runningSFX;
+        Song backgroundMusic; 
 
         float currentTime = 0;
         float lastTime = 0;
@@ -111,9 +113,25 @@ namespace ProjectMonoGame
             Texture2D backdropOneTexture = Content.Load<Texture2D>("BackdropTwo");
             collisionRectangleTexture = Content.Load<Texture2D>("CollisionRectangle");
 
-            runningSFX = Content.Load<SoundEffect>("RunningSFX");
+            SoundEffect footstepsSFX = Content.Load<SoundEffect>("SFX/Finn/FootstepsSFX");
+            SoundEffect landSFX = Content.Load<SoundEffect>("SFX/Finn/LandSFX");
+            SoundEffect jumpSFX = Content.Load<SoundEffect>("SFX/Finn/JumpSFX");
+            SoundEffect wallJumpSFX = Content.Load<SoundEffect>("SFX/Finn/WallJumpSFX");
+            SoundEffect wallSlideSFX = Content.Load<SoundEffect>("SFX/Finn/WallSlideSFX");
+
+            SoundEffect spikesSFX = Content.Load<SoundEffect>("SFX/Dying/SpikesSFX");
+
             List<SoundEffect> playerSFX = new List<SoundEffect>();
-            playerSFX.Add(runningSFX);
+            playerSFX.Add(footstepsSFX);
+            playerSFX.Add(landSFX);
+            playerSFX.Add(jumpSFX);
+            playerSFX.Add(wallJumpSFX);
+            playerSFX.Add(wallSlideSFX);
+            playerSFX.Add(spikesSFX);
+
+            backgroundMusic = Content.Load<Song>("BackgroundMusic");
+            MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.Volume -= 0.6f;
 
             gameState = GameState.Startscreen;
 
@@ -160,7 +178,7 @@ namespace ProjectMonoGame
             spikeTutorial = new ImageDrawer(spikeTutorialTexture, new Vector2(800, 300), new Vector2(400, 400), new Vector2(400, 400));
             wallJumpTutorial = new ImageDrawer(wallJumpTutorialTexture, new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
-            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, hpBar, new KeyboardHandler(), playerSFX);
+            finn = new Player(new Vector2(50, 880), finnSpritesheetLeft, finnSpritesheetRight, doorTutorialTexture, hpBar, new ControllerHandler(), playerSFX);
             allLevels.Update();
         }
 
@@ -170,6 +188,7 @@ namespace ProjectMonoGame
 
         protected override void Update(GameTime gametime)
         {
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
