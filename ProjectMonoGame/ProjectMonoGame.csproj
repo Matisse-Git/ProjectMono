@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AssetFactory.cs" />
     <Compile Include="BackgroundClasses\Animation.cs" />
     <Compile Include="BackgroundClasses\AnimationCreator.cs" />
     <Compile Include="BackgroundClasses\AnimationFrame.cs" />
