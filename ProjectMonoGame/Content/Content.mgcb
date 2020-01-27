@@ -222,6 +222,30 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Menus/GameOver/GameOverTexture.png
 
+#begin Textures/Menus/Options/ControllerTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Menus/Options/ControllerTexture.png
+
+#begin Textures/Menus/Options/DisplayOptionTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Menus/Options/DisplayOptionTexture.png
+
 #begin Textures/Menus/Options/FullscreenNoTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -257,6 +281,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Menus/Options/FullscreenYesTexture.png
+
+#begin Textures/Menus/Options/InputOptionTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Menus/Options/InputOptionTexture.png
 
 #begin Textures/Menus/Startscreen/ExitSC.png
 /importer:TextureImporter

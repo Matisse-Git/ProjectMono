@@ -13,6 +13,8 @@ namespace ProjectMonoGame
         Options,
         InGame,
         GameOver,
+        Fullscreen,
+        Input,
         Endscreen
     }
 
@@ -35,6 +37,7 @@ namespace ProjectMonoGame
         Menu startScreen;
         Menu endScreen;
         Menu gameOverScreen;
+        Menu Options;
 
 
         ImageDrawer title;
@@ -52,7 +55,10 @@ namespace ProjectMonoGame
         ImageDrawer collisionRectangle;
         ImageDrawer collisionRightRectangle;
         ImageDrawer collisionLeftRectangle;
+        ImageDrawer ControllerQuestion;
         List<ImageDrawer> tileCollisionRectangles;
+
+        IController input;
 
         float currentTime = 0;
         float lastTime = 0;
@@ -63,10 +69,14 @@ namespace ProjectMonoGame
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 
+            this.IsMouseVisible = true;
+
             Content.RootDirectory = "Content";
             textureFactory = new AssetFactory<Texture2D>(Content);
             sfxFactory = new AssetFactory<SoundEffect>(Content);
             songFactory = new AssetFactory<Song>(Content);
+            input = new KeyboardHandler();
+            Mouse.WindowHandle = Window.Handle;
         }
 
         protected override void Initialize()
@@ -103,6 +113,9 @@ namespace ProjectMonoGame
             textureFactory.Add("Textures/Menus/Options/FullscreenTexture", "FullscreenTexture");
             textureFactory.Add("Textures/Menus/Options/FullscreenYesTexture", "FullscreenYesTexture");
             textureFactory.Add("Textures/Menus/Options/FullscreenNoTexture", "FullscreenNoTexture");
+            textureFactory.Add("Textures/Menus/Options/DisplayOptionTexture", "DisplayOptionTexture");
+            textureFactory.Add("Textures/Menus/Options/InputOptionTexture", "InputOptionTexture");
+            textureFactory.Add("Textures/Menus/Options/ControllerTexture", "ControllerTexture");
 
             //gameover
             textureFactory.Add("Textures/Menus/GameOver/GameOverRestartTexture", "GameOverRestartTexture");
@@ -154,6 +167,7 @@ namespace ProjectMonoGame
 
             MediaPlayer.Play(songFactory.Find("BackgroundMusic"));
             MediaPlayer.Volume -= 0.85f;
+            MediaPlayer.IsRepeating = true;
 
             gameState = GameState.Startscreen;
 
@@ -176,9 +190,15 @@ namespace ProjectMonoGame
             GOOptionTextures[0] = textureFactory.Find("GameOverRestartTexture");
             GOOptionTextures[1] = textureFactory.Find("GameOverCloseGameTexture");
 
-            startScreen = new Menu(SCOptionTextures, new KeyboardHandler(), 3);
-            endScreen = new Menu(ESOptionTextures, new KeyboardHandler(), 3);
-            gameOverScreen = new Menu(GOOptionTextures, new KeyboardHandler(), 2);
+            Texture2D[] OptionsOptionTextures = new Texture2D[2];
+            OptionsOptionTextures[0] = textureFactory.Find("DisplayOptionTexture");
+            OptionsOptionTextures[1] = textureFactory.Find("InputOptionTexture");
+
+            startScreen = new Menu(SCOptionTextures, input, 3);
+            endScreen = new Menu(ESOptionTextures, input, 3);
+            gameOverScreen = new Menu(GOOptionTextures, input, 2);
+            Options = new Menu(OptionsOptionTextures, input, 2);
+
 
             score = new ScoreHUD(textureFactory.Find("ScoreTexture"), textureFactory.Find("ScoreNumberTexture"));
 
@@ -190,6 +210,8 @@ namespace ProjectMonoGame
             fullscreenQuestion = new ImageDrawer(textureFactory.Find("FullscreenTexture"), new Vector2(550, 250), new Vector2(800, 800), new Vector2(800, 800));
             fullscreenNo = new ImageDrawer(textureFactory.Find("FullscreenNoTexture"), new Vector2(750, 550), new Vector2(400, 400), new Vector2(800, 800));
             fullscreenYes = new ImageDrawer(textureFactory.Find("FullscreenYesTexture"), new Vector2(750, 550), new Vector2(400, 400), new Vector2(800, 800));
+            ControllerQuestion = new ImageDrawer(textureFactory.Find("ControllerTexture"), new Vector2(550, 250), new Vector2(800, 800), new Vector2(800, 800));
+
             gameOver = new ImageDrawer(textureFactory.Find("GameOverTexture"), new Vector2(550, 250), new Vector2(800, 800), new Vector2(800, 800));
             collisionRectangle = new ImageDrawer(textureFactory.Find("CollisionRectangle"), new Vector2(0, 0), new Vector2(0, 0), new Vector2(16, 16));
             tileCollisionRectangles = new List<ImageDrawer>();
@@ -200,7 +222,7 @@ namespace ProjectMonoGame
             spikeTutorial = new ImageDrawer(textureFactory.Find("SpikeTutorial"), new Vector2(800, 300), new Vector2(400, 400), new Vector2(400, 400));
             wallJumpTutorial = new ImageDrawer(textureFactory.Find("WallJumpTutorial"), new Vector2(1200, 300), new Vector2(400, 400), new Vector2(800, 800));
 
-            finn = new Player(new Vector2(50, 880), textureFactory.Find("FinnSpriteLeft"), textureFactory.Find("FinnSpriteRight"), textureFactory.Find("DoorButtonTutorial"), hpBar, new KeyboardHandler(), playerSFX);
+            finn = new Player(new Vector2(50, 880), textureFactory.Find("FinnSpriteLeft"), textureFactory.Find("FinnSpriteRight"), textureFactory.Find("DoorButtonTutorial"), hpBar, input, playerSFX);
             allLevels.Update();
         }
 
@@ -214,6 +236,7 @@ namespace ProjectMonoGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            MouseHandler.Update();
 
             if (gameState == GameState.Startscreen)
             {
@@ -234,18 +257,72 @@ namespace ProjectMonoGame
 
             if (gameState == GameState.Options)
             {
+                switch (Options.Update(gametime))
+                {
+                    case 0:
+                        gameState = GameState.Fullscreen;
+                        break;
+                    case 1:
+                        gameState = GameState.Input;
+                        break;
+                    default:
+                        break;
+                }
+                if (input.GetButtonPressed() == "Back")
+                {
+                    gameState = GameState.Startscreen;
+                }
+
+            }
+
+            if (gameState == GameState.Fullscreen)
+            {
                 currentTime += (float)gametime.ElapsedGameTime.TotalSeconds;
                 if ((currentTime - lastTime) > 1f)
                 {
-                    KeyboardHandler keyboardHandler = new KeyboardHandler();
-                    if (keyboardHandler.GetButtonPressed() == "Confirm")
+                   
+                    if (input.GetButtonPressed() == "Confirm")
                     {
                         graphics.ToggleFullScreen();
                         lastTime = currentTime;
                     }
-                    else if(keyboardHandler.GetButtonPressed() == "Back")
+                    if (MouseHandler.getMouseButtonClicked() == "LeftClick")
                     {
-                        gameState = GameState.Startscreen;
+                        graphics.ToggleFullScreen();
+                        lastTime = currentTime;
+                    }
+                    else if (input.GetButtonPressed() == "Back")
+                    {
+                        gameState = GameState.Options;
+                    }
+                }
+            }
+
+            if (gameState == GameState.Input)
+            {
+                currentTime += (float)gametime.ElapsedGameTime.TotalSeconds;
+                if ((currentTime - lastTime) > 1f)
+                {
+
+                    if (input.GetButtonPressed() == "Confirm" || MouseHandler.getMouseButtonClicked() == "LeftClick")
+                    {
+                        if (input is ControllerHandler)
+                            input = new KeyboardHandler();
+
+                        else
+                            input = new ControllerHandler();
+
+                        startScreen.UpdateInput();
+                        endScreen.UpdateInput();
+                        Options.UpdateInput();
+                        gameOverScreen.UpdateInput();
+                        finn.UpdateInput();
+
+                        lastTime = currentTime;
+                    }
+                    else if (input.GetButtonPressed() == "Back")
+                    {
+                        gameState = GameState.Options;
                     }
                 }
             }
@@ -307,10 +384,14 @@ namespace ProjectMonoGame
                 {
                     case 0:
                         allLevels.currentLevelInt = 0;
+                        allLevels.Update();
+                        finn.score = 0;
                         gameState = GameState.InGame;
                         break;
                     case 1:
                         allLevels.currentLevelInt = 0;
+                        allLevels.Update();
+                        finn.score = 0;
                         gameState = GameState.Startscreen;
                         break;
                     case 2:
@@ -339,7 +420,7 @@ namespace ProjectMonoGame
                 title.Draw(spriteBatch);
             }
 
-            if ( gameState == GameState.Options)
+            if ( gameState == GameState.Fullscreen)
             {
                 backdropTitle.Draw(spriteBatch);
 
@@ -351,6 +432,25 @@ namespace ProjectMonoGame
                     fullscreenNo.Draw(spriteBatch);
                 fullscreenQuestion.Draw(spriteBatch);
 
+            }
+
+            if (gameState == GameState.Options)
+            {
+                backdropTitle.Draw(spriteBatch);
+                Options.Draw(spriteBatch);
+            }
+
+            if (gameState == GameState.Input)
+            {
+                backdropTitle.Draw(spriteBatch);
+
+                if (input is ControllerHandler)
+                {
+                    fullscreenYes.Draw(spriteBatch);
+                }
+                else
+                    fullscreenNo.Draw(spriteBatch);
+                ControllerQuestion.Draw(spriteBatch);
             }
 
             if (gameState == GameState.InGame)

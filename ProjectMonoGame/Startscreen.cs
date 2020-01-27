@@ -15,6 +15,8 @@ namespace ProjectMonoGame
 
         IController inputHandler;
 
+        Vector2 mousePos;
+
         private int menuItems;
         public int position = 0;
 
@@ -27,7 +29,7 @@ namespace ProjectMonoGame
         {
             options = new ImageDrawer[menuItemsIn];
             optionTextures = optionTexturesIn;
-
+            
             for (int i = 0; i < menuItemsIn; i++)
                 options[i] = new ImageDrawer(optionTextures[i], new Vector2(750, 650), new Vector2(400, 400), new Vector2(800, 800));
 
@@ -58,12 +60,31 @@ namespace ProjectMonoGame
                 }
                 lastTime = currentTime;
             }
+            if (mousePos.Y > 685 && mousePos.Y < 750)
+            {
+                position = 0;
+            }
+            if (mousePos.Y > 810 && mousePos.Y < 875)
+            {
+                position = 1;
+            }
+            if (menuItems >= 3)
+            {
+                if (mousePos.Y > 935 && mousePos.Y < 935+125)
+                    position = 2;
+            }
         }
         public int ConfirmChoice(GameTime gametime)
         {
+
             currentTime2 += (float)gametime.ElapsedGameTime.TotalSeconds;
             if ((currentTime2 - lastTime2) > 1f)
             {
+                if (MouseHandler.getMouseButtonClicked() == "LeftClick")
+                {
+                    lastTime2 = currentTime2;
+                    return position;
+                }
                 if (inputHandler.GetButtonPressed() == "Confirm")
                 {
                     lastTime2 = currentTime2;
@@ -75,6 +96,8 @@ namespace ProjectMonoGame
 
         public int Update(GameTime gametime)
         {
+            Console.WriteLine(mousePos.Y);
+            mousePos = MouseHandler.getMousePosition();
             ChangePos(gametime);
             return ConfirmChoice(gametime);
         }
@@ -82,6 +105,15 @@ namespace ProjectMonoGame
         public void Draw(SpriteBatch spriteBatch)
         {
             options[position].Draw(spriteBatch);
+        }
+
+        public void UpdateInput()
+        {
+            if (inputHandler is KeyboardHandler)
+                inputHandler = new ControllerHandler();
+
+            else
+                inputHandler = new KeyboardHandler();
         }
     }
 

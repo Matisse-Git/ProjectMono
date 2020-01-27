@@ -547,6 +547,14 @@ namespace ProjectMonoGame
                 resetLevels = true;
             }
         }
+        public void UpdateInput()
+        {
+            if (inputHandler is KeyboardHandler)
+                inputHandler = new ControllerHandler();
+
+            else
+                inputHandler = new KeyboardHandler();
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
