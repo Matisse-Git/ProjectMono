@@ -103,4 +103,30 @@ namespace ProjectMonoGame
                 return "Null";
         }
     }
+
+    static class MouseHandler
+    {
+        static MouseState mState = Mouse.GetState();
+
+        public static Vector2 getMousePosition()
+        {
+            return new Vector2(mState.X, mState.Y);
+        }
+
+        public static string getMouseButtonClicked()
+        {
+            if (mState.LeftButton == ButtonState.Pressed)
+                return "LeftClick";
+
+            if (mState.RightButton == ButtonState.Pressed)
+                return "RightClick";
+
+            return null;
+        }
+
+        public static void Update()
+        {
+            mState = Mouse.GetState();
+        }
+    }
 }

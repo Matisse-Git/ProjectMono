@@ -85,9 +85,7 @@ namespace ProjectMonoGame
                 for (int j = 0; j < 40; j++)
                 {
                     if (tileArr[i,j] != null)
-                    {
                         tileArr[i, j].Draw(spritebatch);
-                    }
                 }
             }
         }
